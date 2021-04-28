@@ -415,7 +415,7 @@ static bool try_load_partition(const esp_partition_pos_t *partition, esp_image_m
         return false;
     }
 #ifdef BOOTLOADER_BUILD
-    if (bootloader_load_image(partition, data) == ESP_OK) {
+    if (bootloader_load_image_no_verify(partition, data) == ESP_OK) {
         ESP_LOGI(TAG, "Loaded app from partition at offset 0x%x",
                  partition->offset);
         return true;
