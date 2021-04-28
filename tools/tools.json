@@ -53,6 +53,15 @@
             "size": 106855139,
             "url": "https://github.com/espressif/crosstool-NG/releases/download/esp-2020r3/xtensa-esp32-elf-gcc8_4_0-esp-2020r3-win64.zip"
           }
+        },
+        {
+          "name": "esp-2020r3-5-g39b36b0-8.4.0",
+          "status": "recommended",
+          "macos-arm64": {
+            "sha256": "bc9c24cfd57c98f3d6dbdba226939991c068ab5d8034c3287bf38205a282fec6",
+            "size": 84213721,
+            "url": "https://github.com/SeanMollet/crosstool-NG/releases/download/esp-2020r3-5-g39b36b0/xtensa-esp32-elf-gcc8_4_0-esp-2020r3-5-g39b36b0-macos_arm64.tar.gz"
+          }
         }
       ]
     },
@@ -108,6 +117,15 @@
             "sha256": "6ea78b72ec52330b69af91dbe6c77c22bdc827817f044aa30306270453032bb4",
             "size": 107228353,
             "url": "https://github.com/espressif/crosstool-NG/releases/download/esp-2020r3/xtensa-esp32s2-elf-gcc8_4_0-esp-2020r3-win64.zip"
+          }
+        },
+        {
+          "name": "esp-2020r3-5-g39b36b0-8.4.0",
+          "status": "recommended",
+          "macos-arm64": {
+            "sha256": "5776cec72ac6d3243c511247a5e73325fc92aa477c8a319a039c21e2a34d21fe",
+            "size": 87361626,
+            "url": "https://github.com/SeanMollet/crosstool-NG/releases/download/esp-2020r3-5-g39b36b0/xtensa-esp32s2-elf-gcc8_4_0-esp-2020r3-5-g39b36b0-macos_arm64.tar.gz"
           }
         }
       ]
@@ -262,6 +280,11 @@
             "size": 8872874,
             "url": "https://github.com/espressif/binutils-esp32ulp/releases/download/v2.28.51-esp-20191205/binutils-esp32ulp-macos-2.28.51-esp-20191205.tar.gz"
           },
+          "macos-arm64": {
+            "sha256": "a35d9e7a0445247c7fc9dccd3fbc35682f0fafc28beeb10c94b59466317190c4",
+            "size": 8872874,
+            "url": "https://github.com/espressif/binutils-esp32ulp/releases/download/v2.28.51-esp-20191205/binutils-esp32ulp-macos-2.28.51-esp-20191205.tar.gz"
+          },
           "name": "2.28.51-esp-20191205",
           "status": "recommended",
           "win32": {
@@ -320,6 +343,11 @@
             "size": 8876194,
             "url": "https://github.com/espressif/binutils-esp32ulp/releases/download/v2.28.51-esp-20191205/binutils-esp32s2ulp-macos-2.28.51-esp-20191205.tar.gz"
           },
+          "macos-arm64": {
+            "sha256": "5a9bb678a5246638cbda303f523d9bb8121a9a24dc01ecb22c21c46c41184155",
+            "size": 8876194,
+            "url": "https://github.com/espressif/binutils-esp32ulp/releases/download/v2.28.51-esp-20191205/binutils-esp32s2ulp-macos-2.28.51-esp-20191205.tar.gz"
+          },
           "name": "2.28.51-esp-20191205",
           "status": "recommended",
           "win32": {
@@ -364,7 +392,8 @@
             ]
           ],
           "platforms": [
-            "macos"
+            "macos",
+            "macos-arm64"
           ]
         }
       ],
@@ -382,6 +411,11 @@
             "url": "https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-Linux-x86_64.tar.gz"
           },
           "macos": {
+            "sha256": "f60e0ef96da48725cd8da7d6abe83cd9501167aa51625c90dd4d31081a631279",
+            "size": 35802699,
+            "url": "https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-Darwin-x86_64.tar.gz"
+          },
+          "macos-arm64": {
             "sha256": "f60e0ef96da48725cd8da7d6abe83cd9501167aa51625c90dd4d31081a631279",
             "size": 35802699,
             "url": "https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-Darwin-x86_64.tar.gz"
@@ -446,6 +480,11 @@
             "size": 1811755,
             "url": "https://github.com/espressif/openocd-esp32/releases/download/v0.10.0-esp32-20200709/openocd-esp32-macos-0.10.0-esp32-20200709.tar.gz"
           },
+          "macos-arm64": {
+            "sha256": "97cf84dd3dfb129a7d4842599870a3b0dbb40b2713d3c5153738c44907e85d6e",
+            "size": 1811755,
+            "url": "https://github.com/espressif/openocd-esp32/releases/download/v0.10.0-esp32-20200709/openocd-esp32-macos-0.10.0-esp32-20200709.tar.gz"
+          },
           "name": "v0.10.0-esp32-20200709",
           "status": "recommended",
           "win32": {
@@ -495,6 +534,11 @@
             "url": "https://dl.espressif.com/dl/ninja-1.10.2-linux64.tar.gz"
           },
           "macos": {
+            "sha256": "847bb1ca4bc16d8dba6aeed3ecb5055498b86bc68c364c37583eb5738bb440f1",
+            "size": 240112,
+            "url": "https://dl.espressif.com/dl/ninja-1.10.2-osx.tar.gz"
+          },
+          "macos-arm64": {
             "sha256": "847bb1ca4bc16d8dba6aeed3ecb5055498b86bc68c364c37583eb5738bb440f1",
             "size": 240112,
             "url": "https://dl.espressif.com/dl/ninja-1.10.2-osx.tar.gz"
