@@ -171,6 +171,11 @@
             "size": 93013216,
             "url": "https://dl.espressif.com/dl/xtensa-esp32s3-elf-gcc8_4_0-esp-2020r3-macos.tar.gz"
           },
+          "macos-arm64": {
+            "sha256": "c09b8fcbb840540a3f59429b1bbfbe5abfcacccf7a8a955e4e01e3f50b53a079",
+            "size": 93013216,
+            "url": "https://dl.espressif.com/dl/xtensa-esp32s3-elf-gcc8_4_0-esp-2020r3-macos.tar.gz"
+          },
           "name": "esp-2020r3-8.4.0",
           "status": "recommended",
           "win32": {
@@ -218,6 +223,11 @@
             "url": "https://dl.espressif.com/dl/toolchains/preview/riscv32-esp-elf-gcc8_4_0-crosstool-ng-1.24.0-123-g64eb9ff-linux-armel.tar.gz"
           },
           "macos": {
+            "sha256": "35b1aef85b7e6b4268774f627e8e835d087bcf8b9972cfb6436614aa2e40d4a9",
+            "size": 158594401,
+            "url": "https://dl.espressif.com/dl/toolchains/preview/riscv32-esp-elf-gcc8_4_0-crosstool-ng-1.24.0-123-g64eb9ff-macos.tar.gz"
+          },
+          "macos-arm64": {
             "sha256": "35b1aef85b7e6b4268774f627e8e835d087bcf8b9972cfb6436614aa2e40d4a9",
             "size": 158594401,
             "url": "https://dl.espressif.com/dl/toolchains/preview/riscv32-esp-elf-gcc8_4_0-crosstool-ng-1.24.0-123-g64eb9ff-macos.tar.gz"
