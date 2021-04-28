@@ -90,3 +90,6 @@
 [submodule "components/cmock/CMock"]
 	path = components/cmock/CMock
 	url = ../../ThrowTheSwitch/CMock.git
+[submodule "components/esp-google-iot/iot-device-sdk-embedded-c"]
+	path = components/esp-google-iot/iot-device-sdk-embedded-c
+	url = https://github.com/GardenDev/iot-device-sdk-embedded-c.git
