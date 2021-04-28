@@ -54,6 +54,7 @@ extern wifi_mac_time_update_cb_t s_wifi_mac_time_update_cb;
 static const char* TAG = "phy_init";
 
 static _lock_t s_phy_access_lock;
+static int phy_max_tx_power = CONFIG_ESP32_PHY_MAX_TX_POWER;
 
 /* Indicate PHY is calibrated or not */
 static bool s_is_phy_calibrated = false;
@@ -319,6 +320,21 @@ IRAM_ATTR void esp_mac_bb_power_down(void)
 }
 #endif
 
+esp_err_t esp_set_phy_tx_max_power(int tx_max_power)
+{
+    if (tx_max_power < 10 || tx_max_power > 20)
+        return ESP_ERR_INVALID_ARG;
+    phy_max_tx_power = tx_max_power;
+
+    phy_init_data.params[44] = LIMIT(phy_max_tx_power * 4, 40, 78);
+    phy_init_data.params[45] = LIMIT(phy_max_tx_power * 4, 40, 72);
+    phy_init_data.params[46] = LIMIT(phy_max_tx_power * 4, 40, 66);
+    phy_init_data.params[47] = LIMIT(phy_max_tx_power * 4, 40, 60);
+    phy_init_data.params[48] = LIMIT(phy_max_tx_power * 4, 40, 56);
+    phy_init_data.params[49] = LIMIT(phy_max_tx_power * 4, 40, 52);
+    return ESP_OK;
+}
+
 // PHY init data handling functions
 #if CONFIG_ESP32_PHY_INIT_DATA_IN_PARTITION
 #include "esp_partition.h"
@@ -545,7 +561,7 @@ static void __attribute((unused)) esp_phy_reduce_tx_power(esp_phy_init_data_t* i
 
     for(i = 0; i < PHY_TX_POWER_NUM; i++) {
         // LOWEST_PHY_TX_POWER is the lowest tx power
-        init_data->params[PHY_TX_POWER_OFFSET+i] = PHY_TX_POWER_LOWEST;
+        init_data->params[PHY_TX_POWER_OFFSET+i] = LIMIT(phy_max_tx_power * 4, 0, 52);
     }
 }
 #endif

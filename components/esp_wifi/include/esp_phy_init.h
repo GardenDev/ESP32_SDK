@@ -73,6 +73,14 @@ typedef enum {
 #endif
 
 /**
+ * @brief Set wifi tx max power, before wifi_start()
+ * 
+ * @param tx_max_power 10 ~ 20
+ * @return esp_err_t ESP_OK on success or ESP_ERR_INVALID_ARG
+ */
+esp_err_t esp_set_phy_tx_max_power(int tx_max_power);
+
+/**
  * @brief Get PHY init data
  *
  * If "Use a partition to store PHY init data" option is set in menuconfig,

@@ -38,7 +38,7 @@ static const char phy_init_magic_pre[] = PHY_INIT_MAGIC;
 /**
  * @brief Structure containing default recommended PHY initialization parameters.
  */
-static const esp_phy_init_data_t phy_init_data= { {
+static esp_phy_init_data_t phy_init_data= { {
         3,
         3,
         0x05,
