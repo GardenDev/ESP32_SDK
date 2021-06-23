@@ -34,6 +34,7 @@ inline void sntp_set_sync_status(sntp_sync_status_t sync_status)
 
 void __attribute__((weak)) sntp_sync_time(struct timeval *tv)
 {
+    ESP_LOGW(TAG, "trigger sntp_sync_time");
     if (sntp_sync_mode == SNTP_SYNC_MODE_IMMED) {
         settimeofday(tv, NULL);
         sntp_set_sync_status(SNTP_SYNC_STATUS_COMPLETED);
