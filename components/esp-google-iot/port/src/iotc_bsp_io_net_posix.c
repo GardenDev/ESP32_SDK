@@ -262,7 +262,8 @@ iotc_bsp_io_net_state_t iotc_bsp_io_net_select(
   /* calculate max fd */
   const int max_fd = MAX(max_fd_read, MAX(max_fd_write, max_fd_error));
 
-  tv.tv_sec = timeout_sec;
+  // tv.tv_sec = timeout_sec;
+  tv.tv_usec = 200 * 1000;
 
   /* call the actual posix select */
   const int result = select(max_fd + 1, &rfds, &wfds, &efds, &tv);
