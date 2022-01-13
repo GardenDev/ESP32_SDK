@@ -17,7 +17,7 @@
 #include <assert.h>
 #include "esp_efuse_table.h"
 
-// md5_digest_table f9a84eb22f94a7bc083b4c6817a33a59
+// md5_digest_table 196aac9fbce9004685fa9a7d2b79fc17
 // This file was generated from the file esp_efuse_table.csv. DO NOT CHANGE THIS FILE MANUALLY.
 // If you want to change some fields, you need to change esp_efuse_table.csv file
 // then run `efuse_common_table` or `efuse_custom_table` command it will generate this file.
@@ -453,7 +453,11 @@ static const esp_efuse_desc_t ADC1_CAL_VOL_ATTEN3[] = {
 };
 
 static const esp_efuse_desc_t USER_DATA[] = {
-    {EFUSE_BLK3, 0, 256}, 	 // User data,
+    {EFUSE_BLK3, 0, 200}, 	 // User data,
+};
+
+static const esp_efuse_desc_t USER_DATA_MAC_CUSTOM[] = {
+    {EFUSE_BLK3, 200, 48}, 	 // Custom MAC,
 };
 
 static const esp_efuse_desc_t KEY0[] = {
@@ -1025,6 +1029,11 @@ const esp_efuse_desc_t* ESP_EFUSE_ADC1_CAL_VOL_ATTEN3[] = {
 
 const esp_efuse_desc_t* ESP_EFUSE_USER_DATA[] = {
     &USER_DATA[0],    		// User data
+    NULL
+};
+
+const esp_efuse_desc_t* ESP_EFUSE_USER_DATA_MAC_CUSTOM[] = {
+    &USER_DATA_MAC_CUSTOM[0],    		// Custom MAC
     NULL
 };
 
