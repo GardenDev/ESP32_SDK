@@ -145,7 +145,10 @@
     ADC1_CAL_VOL_ATTEN3,                  EFUSE_BLK2,  218,   10,     ADC1 calibration voltage at atten3
 
 ################
-USER_DATA,                                EFUSE_BLK3,    0,  256,     User data
+USER_DATA,                                EFUSE_BLK3,    0,  200,     User data
+USER_DATA_MAC_CUSTOM,                     EFUSE_BLK3,  200,   48,     Custom MAC
+
+################
 KEY0,                                     EFUSE_BLK4,    0,  256,     Key0 or user data
 KEY1,                                     EFUSE_BLK5,    0,  256,     Key1 or user data
 KEY2,                                     EFUSE_BLK6,    0,  256,     Key2 or user data
