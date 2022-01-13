@@ -57,7 +57,24 @@ esp_err_t esp_base_mac_addr_get(uint8_t *mac)
 esp_err_t esp_efuse_mac_get_custom(uint8_t *mac)
 {
 #if !CONFIG_IDF_TARGET_ESP32
-    return ESP_ERR_NOT_SUPPORTED; // TODO IDF-1326
+    size_t size_bits = esp_efuse_get_field_size(ESP_EFUSE_USER_DATA_MAC_CUSTOM);
+    assert((size_bits % 8) == 0);
+    esp_err_t err = esp_efuse_read_field_blob(ESP_EFUSE_USER_DATA_MAC_CUSTOM, mac, size_bits);
+    if (err != ESP_OK) {
+        return err;
+    }
+    size_t size = size_bits / 8;
+    if (mac[0] == 0 && memcmp(mac, &mac[1], size - 1) == 0) {
+        ESP_LOGE(TAG, "eFuse MAC_CUSTOM is empty");
+        return ESP_ERR_INVALID_MAC;
+    }
+#if (ESP_MAC_ADDRESS_LEN == 8)
+    err = esp_efuse_read_field_blob(ESP_EFUSE_MAC_EXT, &mac[6], ESP_MAC_ADDRESS_LEN - size);
+    if (err != ESP_OK) {
+        return err;
+    }
+#endif
+    return ESP_OK;
 #else
     uint8_t version;
     esp_efuse_read_field_blob(ESP_EFUSE_MAC_CUSTOM_VER, &version, 8);
