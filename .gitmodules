@@ -90,3 +90,6 @@
 [submodule "components/esp_coex/lib"]
 	path = components/esp_coex/lib
 	url = ../../espressif/esp-coex-lib.git
+[submodule "components/esp-google-iot/iot-device-sdk-embedded-c"]
+	path = components/esp-google-iot/iot-device-sdk-embedded-c
+	url = git@github.com:GardenDev/iot-device-sdk-embedded-c.git
