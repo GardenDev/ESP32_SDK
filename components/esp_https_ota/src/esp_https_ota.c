@@ -25,6 +25,31 @@
 #define DEFAULT_OTA_BUF_SIZE IMAGE_HEADER_SIZE
 static const char *TAG = "esp_https_ota";
 
+#define ESP_LOGE( tag, format, ...) \
+    do { \
+        esp_log_write(ESP_LOG_ERROR, tag, format "\n", ##__VA_ARGS__); \
+    } while(0)
+
+#define ESP_LOGD( tag, format, ...) \
+    do { \
+        esp_log_write(ESP_LOG_DEBUG, tag, format "\n", ##__VA_ARGS__); \
+    } while(0)
+
+#define ESP_LOGI( tag, format, ...) \
+    do { \
+        esp_log_write(ESP_LOG_INFO, tag, format "\n", ##__VA_ARGS__); \
+    } while(0)
+
+#define ESP_LOGW( tag, format, ...) \
+    do { \
+        esp_log_write(ESP_LOG_WARN, tag, format "\n", ##__VA_ARGS__); \
+    } while(0)
+
+#define ESP_LOGV( tag, format, ...) \
+    do { \
+        esp_log_write(ESP_LOG_VERBOSE, tag, format "\n", ##__VA_ARGS__); \
+    } while(0)
+
 typedef enum {
     ESP_HTTPS_OTA_INIT,
     ESP_HTTPS_OTA_BEGIN,
@@ -143,7 +168,6 @@ static esp_err_t _ota_write(esp_https_ota_t *https_ota_handle, const void *buffe
 esp_err_t esp_https_ota_begin(esp_https_ota_config_t *ota_config, esp_https_ota_handle_t *handle)
 {
     esp_err_t err;
-
     if (handle == NULL || ota_config == NULL || ota_config->http_config == NULL) {
         ESP_LOGE(TAG, "esp_https_ota_begin: Invalid argument");
         if (handle) {
