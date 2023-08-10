@@ -22,31 +22,6 @@
 #ifndef BOOTLOADER_BUILD
 static __attribute__((unused)) const char *TAG = "secure_boot";
 
-#define ESP_LOGE( tag, format, ...) \
-    do { \
-        esp_log_write(ESP_LOG_ERROR, tag, format "\n", ##__VA_ARGS__); \
-    } while(0)
-
-#define ESP_LOGD( tag, format, ...) \
-    do { \
-        esp_log_write(ESP_LOG_DEBUG, tag, format "\n", ##__VA_ARGS__); \
-    } while(0)
-
-#define ESP_LOGI( tag, format, ...) \
-    do { \
-        esp_log_write(ESP_LOG_INFO, tag, format "\n", ##__VA_ARGS__); \
-    } while(0)
-
-#define ESP_LOGW( tag, format, ...) \
-    do { \
-        esp_log_write(ESP_LOG_WARN, tag, format "\n", ##__VA_ARGS__); \
-    } while(0)
-
-#define ESP_LOGV( tag, format, ...) \
-    do { \
-        esp_log_write(ESP_LOG_VERBOSE, tag, format "\n", ##__VA_ARGS__); \
-    } while(0)
-
 #if CONFIG_SECURE_SIGNED_APPS_RSA_SCHEME && CONFIG_SECURE_SIGNED_ON_UPDATE_NO_SECURE_BOOT
 
 static void rsa_check_signature_on_update_check(void)
