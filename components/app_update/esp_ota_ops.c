@@ -61,31 +61,6 @@ static uint32_t s_ota_ops_last_handle = 0;
 
 const static char *TAG = "esp_ota_ops";
 
-#define ESP_LOGE( tag, format, ...) \
-    do { \
-        esp_log_write(ESP_LOG_ERROR, tag, format "\n", ##__VA_ARGS__); \
-    } while(0)
-
-#define ESP_LOGD( tag, format, ...) \
-    do { \
-        esp_log_write(ESP_LOG_DEBUG, tag, format "\n", ##__VA_ARGS__); \
-    } while(0)
-
-#define ESP_LOGI( tag, format, ...) \
-    do { \
-        esp_log_write(ESP_LOG_INFO, tag, format "\n", ##__VA_ARGS__); \
-    } while(0)
-
-#define ESP_LOGW( tag, format, ...) \
-    do { \
-        esp_log_write(ESP_LOG_WARN, tag, format "\n", ##__VA_ARGS__); \
-    } while(0)
-
-#define ESP_LOGV( tag, format, ...) \
-    do { \
-        esp_log_write(ESP_LOG_VERBOSE, tag, format "\n", ##__VA_ARGS__); \
-    } while(0)
-
 /* Return true if this is an OTA app partition */
 static bool is_ota_partition(const esp_partition_t *p)
 {
