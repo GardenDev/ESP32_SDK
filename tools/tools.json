@@ -171,11 +171,6 @@
             "size": 93013216,
             "url": "https://dl.espressif.com/dl/xtensa-esp32s3-elf-gcc8_4_0-esp-2020r3-macos.tar.gz"
           },
-          "macos-arm64": {
-            "sha256": "c09b8fcbb840540a3f59429b1bbfbe5abfcacccf7a8a955e4e01e3f50b53a079",
-            "size": 93013216,
-            "url": "https://dl.espressif.com/dl/xtensa-esp32s3-elf-gcc8_4_0-esp-2020r3-macos.tar.gz"
-          },
           "name": "esp-2020r3-8.4.0",
           "status": "recommended",
           "win32": {
@@ -187,6 +182,15 @@
             "sha256": "1caf56e9588214d8f1bc17734680ebab2906da3b5f31095e60407dad170f1221",
             "size": 107245907,
             "url": "https://dl.espressif.com/dl/xtensa-esp32s3-elf-gcc8_4_0-esp-2020r3-win64.zip"
+          }
+        },
+        {
+          "name": "esp-2021r2-patch4-8.4.0",
+          "status": "recommended",
+          "macos-arm64": {
+            "sha256": "be3bc72c249cd9abadb78dbfeaeb5d3965194f3bc64fcb7883824a527f7e8a5a",
+            "size": 66770786,
+            "url": "https://github.com/espressif/crosstool-NG/releases/download/esp-2021r2-patch4/xtensa-esp32s3-elf-gcc8_4_0-esp-2021r2-patch4-macos-arm64.tar.gz"
           }
         }
       ]
@@ -227,11 +231,6 @@
             "size": 158594401,
             "url": "https://dl.espressif.com/dl/toolchains/preview/riscv32-esp-elf-gcc8_4_0-crosstool-ng-1.24.0-123-g64eb9ff-macos.tar.gz"
           },
-          "macos-arm64": {
-            "sha256": "35b1aef85b7e6b4268774f627e8e835d087bcf8b9972cfb6436614aa2e40d4a9",
-            "size": 158594401,
-            "url": "https://dl.espressif.com/dl/toolchains/preview/riscv32-esp-elf-gcc8_4_0-crosstool-ng-1.24.0-123-g64eb9ff-macos.tar.gz"
-          },
           "name": "1.24.0.123_64eb9ff-8.4.0",
           "status": "recommended",
           "win32": {
@@ -244,6 +243,15 @@
             "size": 191565525,
             "url": "https://dl.espressif.com/dl/toolchains/preview/riscv32-esp-elf-gcc8_4_0-crosstool-ng-1.24.0-123-g64eb9ff-win64.zip"
           }
+        },
+        {
+          "name": "esp-2021r2-patch4-8.4.0",
+          "status": "recommended",
+          "macos-arm64": {
+            "sha256": "2a0b9047033f330fdffdb4a4702fc0fc3d9dbed61a1b9822776a22d98fa98ac5",
+            "size": 191162137,
+            "url": "https://github.com/espressif/crosstool-NG/releases/download/esp-2021r2-patch4/riscv32-esp-elf-gcc8_4_0-esp-2021r2-patch4-macos-arm64.tar.gz"
+          }
         }
       ]
     },
@@ -251,91 +259,20 @@
       "description": "Toolchain for ESP32 ULP coprocessor",
       "export_paths": [
         [
-          "esp32ulp-elf-binutils",
+          "esp32ulp-elf",
           "bin"
         ]
       ],
       "export_vars": {},
       "info_url": "https://github.com/espressif/binutils-esp32ulp",
       "install": "always",
-      "license": "GPL-2.0-or-later",
+      "license": "GPL-3.0-or-later",
       "name": "esp32ulp-elf",
-      "platform_overrides": [
-        {
-          "install": "never",
-          "platforms": [
-            "linux-i686"
-          ]
-        }
-      ],
       "version_cmd": [
         "esp32ulp-elf-as",
         "--version"
       ],
-      "version_regex": "\\(GNU Binutils\\)\\s+([0-9a-z\\.\\-]+)",
-      "versions": [
-        {
-          "linux-amd64": {
-            "sha256": "3016c4fc551181175bd9979869bc1d1f28fa8efa25a0e29ad7f833fca4bc03d7",
-            "size": 8248656,
-            "url": "https://github.com/espressif/binutils-esp32ulp/releases/download/v2.28.51-esp-20191205/binutils-esp32ulp-linux-amd64-2.28.51-esp-20191205.tar.gz"
-          },
-          "linux-armel": {
-            "sha256": "88967c086a6e71834282d9ae05841ee74dae1815f27807b25cdd3f7775a47101",
-            "size": 8033639,
-            "url": "https://github.com/espressif/binutils-esp32ulp/releases/download/v2.28.51-esp-20191205/binutils-esp32ulp-linux-armel-2.28.51-esp-20191205.tar.gz"
-          },
-          "macos": {
-            "sha256": "a35d9e7a0445247c7fc9dccd3fbc35682f0fafc28beeb10c94b59466317190c4",
-            "size": 8872874,
-            "url": "https://github.com/espressif/binutils-esp32ulp/releases/download/v2.28.51-esp-20191205/binutils-esp32ulp-macos-2.28.51-esp-20191205.tar.gz"
-          },
-          "macos-arm64": {
-            "sha256": "a35d9e7a0445247c7fc9dccd3fbc35682f0fafc28beeb10c94b59466317190c4",
-            "size": 8872874,
-            "url": "https://github.com/espressif/binutils-esp32ulp/releases/download/v2.28.51-esp-20191205/binutils-esp32ulp-macos-2.28.51-esp-20191205.tar.gz"
-          },
-          "name": "2.28.51-esp-20191205",
-          "status": "recommended",
-          "win32": {
-            "sha256": "bade309353a9f0a4e5cc03bfe84845e33205f05502c4b199195e871ded271ab5",
-            "size": 12234162,
-            "url": "https://github.com/espressif/binutils-esp32ulp/releases/download/v2.28.51-esp-20191205/binutils-esp32ulp-win32-2.28.51-esp-20191205.zip"
-          },
-          "win64": {
-            "sha256": "bade309353a9f0a4e5cc03bfe84845e33205f05502c4b199195e871ded271ab5",
-            "size": 12234162,
-            "url": "https://github.com/espressif/binutils-esp32ulp/releases/download/v2.28.51-esp-20191205/binutils-esp32ulp-win32-2.28.51-esp-20191205.zip"
-          }
-        }
-      ]
-    },
-    {
-      "description": "Toolchain for ESP32-S2 ULP coprocessor",
-      "export_paths": [
-        [
-          "esp32s2ulp-elf-binutils",
-          "bin"
-        ]
-      ],
-      "export_vars": {},
-      "info_url": "https://github.com/espressif/binutils-esp32ulp",
-      "install": "always",
-      "license": "GPL-2.0-or-later",
-      "name": "esp32s2ulp-elf",
-      "platform_overrides": [
-        {
-          "install": "never",
-          "platforms": [
-            "linux-i686"
-          ]
-        }
-      ],
-      "version_cmd": [
-        "esp32s2ulp-elf-as",
-        "--version"
-      ],
-      "version_regex": "\\(GNU Binutils\\)\\s+([0-9a-z\\.\\-]+)",
+      "version_regex": "\\(GNU Binutils\\)\\s+([a-z0-9.-_]+)",
       "versions": [
         {
           "linux-amd64": {
@@ -353,11 +290,6 @@
             "size": 8876194,
             "url": "https://github.com/espressif/binutils-esp32ulp/releases/download/v2.28.51-esp-20191205/binutils-esp32s2ulp-macos-2.28.51-esp-20191205.tar.gz"
           },
-          "macos-arm64": {
-            "sha256": "5a9bb678a5246638cbda303f523d9bb8121a9a24dc01ecb22c21c46c41184155",
-            "size": 8876194,
-            "url": "https://github.com/espressif/binutils-esp32ulp/releases/download/v2.28.51-esp-20191205/binutils-esp32s2ulp-macos-2.28.51-esp-20191205.tar.gz"
-          },
           "name": "2.28.51-esp-20191205",
           "status": "recommended",
           "win32": {
@@ -369,6 +301,15 @@
             "sha256": "587de59fbb469a39f96168ae3eaa9f06b2601e6e0543c87eaf1bd97f23e5c4ca",
             "size": 12239199,
             "url": "https://github.com/espressif/binutils-esp32ulp/releases/download/v2.28.51-esp-20191205/binutils-esp32s2ulp-win32-2.28.51-esp-20191205.zip"
+          }
+        },
+        {
+          "name": "2.35_20220830",
+          "status": "recommended",
+          "macos-arm64": {
+            "sha256": "73bda8476ef92d4f4abee96519abbba40e5ee32f368427469447b83cc7bb9b42",
+            "size": 15045401,
+            "url": "https://github.com/espressif/binutils-gdb/releases/download/esp32ulp-elf-v2.35_20220830/esp32ulp-elf-2.35_20220830-macos-arm64.tar.gz"
           }
         }
       ]
@@ -425,11 +366,6 @@
             "size": 35802699,
             "url": "https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-Darwin-x86_64.tar.gz"
           },
-          "macos-arm64": {
-            "sha256": "f60e0ef96da48725cd8da7d6abe83cd9501167aa51625c90dd4d31081a631279",
-            "size": 35802699,
-            "url": "https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-Darwin-x86_64.tar.gz"
-          },
           "name": "3.16.4",
           "status": "recommended",
           "win32": {
@@ -441,6 +377,15 @@
             "sha256": "f37963bcfcebdfe5864926a3623f6c21220c35790c39cd65e64bd521cbb39c55",
             "size": 32812189,
             "url": "https://github.com/Kitware/CMake/releases/download/v3.16.4/cmake-3.16.4-win64-x64.zip"
+          }
+        },
+        {
+          "name": "3.23.21",
+          "status": "recommended",
+          "macos-arm64": {
+            "sha256": "f794ed92ccb4e9b6619a77328f313497d7decf8fb7e047ba35a348b838e0e1e2",
+            "size": 70988516,
+            "url": "https://github.com/Kitware/CMake/releases/download/v3.23.1/cmake-3.23.1-macos-universal.tar.gz"
           }
         }
       ]
@@ -490,11 +435,6 @@
             "size": 1811755,
             "url": "https://github.com/espressif/openocd-esp32/releases/download/v0.10.0-esp32-20200709/openocd-esp32-macos-0.10.0-esp32-20200709.tar.gz"
           },
-          "macos-arm64": {
-            "sha256": "97cf84dd3dfb129a7d4842599870a3b0dbb40b2713d3c5153738c44907e85d6e",
-            "size": 1811755,
-            "url": "https://github.com/espressif/openocd-esp32/releases/download/v0.10.0-esp32-20200709/openocd-esp32-macos-0.10.0-esp32-20200709.tar.gz"
-          },
           "name": "v0.10.0-esp32-20200709",
           "status": "recommended",
           "win32": {
@@ -506,6 +446,15 @@
             "sha256": "b96b95607ca0c5899427f5b88cda7389da11f53ac857d3d2fe467e571af5137e",
             "size": 2152463,
             "url": "https://github.com/espressif/openocd-esp32/releases/download/v0.10.0-esp32-20200709/openocd-esp32-win32-0.10.0-esp32-20200709.zip"
+          }
+        },
+        {
+          "name": "v0.11.0-esp32-20220706",
+          "status": "recommended",
+          "macos-arm64": {
+            "sha256": "7c5e721aac2ca11fc53595c7df32ea81c348854055ac3fe36340afbe3842756e",
+            "size": 2208202,
+            "url": "https://github.com/espressif/openocd-esp32/releases/download/v0.11.0-esp32-20220706/openocd-esp32-macos-arm64-0.11.0-esp32-20220706.tar.gz"
           }
         }
       ]
