@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2015-2021 Espressif Systems (Shanghai) CO LTD
+ * SPDX-FileCopyrightText: 2015-2023 Espressif Systems (Shanghai) CO LTD
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -7,6 +7,7 @@
 #include <esp_types.h>
 #include "esp_err.h"
 #include "freertos/FreeRTOS.h"
+#include "esp_heap_caps.h"
 #include "driver/gpio.h"
 #include "driver/rtc_io.h"
 #include "soc/soc.h"
@@ -360,7 +361,7 @@ esp_err_t gpio_config(const gpio_config_t *pGPIOConfig)
         if (((gpio_pin_mask >> io_num) & BIT(0))) {
             assert(io_reg != (intptr_t)NULL);
 
-#if SOC_RTCIO_INPUT_OUTPUT_SUPPORTED
+#if SOC_RTCIO_PIN_COUNT > 0
             if (rtc_gpio_is_valid_gpio(io_num)) {
                 rtc_gpio_deinit(io_num);
             }
@@ -497,7 +498,8 @@ esp_err_t gpio_install_isr_service(int intr_alloc_flags)
 {
     GPIO_CHECK(gpio_context.gpio_isr_func == NULL, "GPIO isr service already installed", ESP_ERR_INVALID_STATE);
     esp_err_t ret = ESP_ERR_NO_MEM;
-    gpio_isr_func_t *isr_func = (gpio_isr_func_t *) calloc(GPIO_NUM_MAX, sizeof(gpio_isr_func_t));
+    const uint32_t alloc_caps = (intr_alloc_flags & ESP_INTR_FLAG_IRAM) ? MALLOC_CAP_INTERNAL : MALLOC_CAP_DEFAULT;
+    gpio_isr_func_t *isr_func = (gpio_isr_func_t *) heap_caps_calloc(GPIO_NUM_MAX, sizeof(gpio_isr_func_t), alloc_caps);
     if (isr_func) {
         portENTER_CRITICAL(&gpio_context.gpio_spinlock);
         if (gpio_context.gpio_isr_func == NULL) {

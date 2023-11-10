@@ -24,12 +24,14 @@ if(NOT BOOTLOADER_BUILD)
                      "intr_alloc.c"
                      "mac_addr.c"
                      "periph_ctrl.c"
+                     "revision.c"
                      "rtc_module.c"
                      "sleep_modes.c"
                      "sleep_gpio.c"
                      "sleep_modem.c"
                      "regi2c_ctrl.c"
                      "esp_gpio_reserve.c"
+                     "sar_periph_ctrl_common.c"
                      "port/${target}/io_mux.c"
                      "port/${target}/esp_clk_tree.c"
                      "port/esp_clk_tree_common.c")
@@ -112,15 +114,6 @@ if(NOT BOOTLOADER_BUILD)
 
     if(CONFIG_SOC_RTC_FAST_MEM_SUPPORTED)
         list(APPEND srcs "sleep_wake_stub.c")
-    endif()
-
-    if(CONFIG_IDF_TARGET_ESP32H2)
-        list(REMOVE_ITEM srcs
-                "sleep_cpu.c"         # TODO: IDF-6267
-                "sleep_modes.c"       # TODO: IDF-6267
-                "sleep_wake_stub.c"   # TODO: IDF-6267
-                "sleep_gpio.c"        # TODO: IDF-6267
-            )
     endif()
 else()
     # Requires "_esp_error_check_failed()" function

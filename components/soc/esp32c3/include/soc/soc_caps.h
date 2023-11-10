@@ -175,6 +175,7 @@
 #define SOC_I2C_NUM                 (1U)
 
 #define SOC_I2C_FIFO_LEN            (32) /*!< I2C hardware FIFO depth */
+#define SOC_I2C_CMD_REG_NUM         (8)  /*!< Number of I2C command registers */
 #define SOC_I2C_SUPPORT_SLAVE       (1)
 
 // FSM_RST only resets the FSM, not using it. So SOC_I2C_SUPPORT_HW_FSM_RST not defined.
@@ -326,6 +327,9 @@
 #define SOC_TIMER_GROUP_SUPPORT_APB       (1)
 #define SOC_TIMER_GROUP_TOTAL_TIMERS      (2)
 
+/*--------------------------- WATCHDOG CAPS ---------------------------------------*/
+#define SOC_MWDT_SUPPORT_XTAL              (1)
+
 /*-------------------------- TWAI CAPS ---------------------------------------*/
 #define SOC_TWAI_CONTROLLER_NUM         1UL
 #define SOC_TWAI_CLK_SUPPORT_APB        1
@@ -375,6 +379,10 @@
 /*-------------------------- COEXISTENCE HARDWARE PTI CAPS -------------------------------*/
 #define SOC_COEX_HW_PTI                 (1)
 
+/*-------------------------- EXTERNAL COEXISTENCE CAPS -------------------------------------*/
+#define SOC_EXTERNAL_COEX_ADVANCE              (0) /*!< HARDWARE ADVANCED EXTERNAL COEXISTENCE CAPS */
+#define SOC_EXTERNAL_COEX_LEADER_TX_LINE       (0) /*!< EXTERNAL COEXISTENCE TX LINE CAPS */
+
 /*--------------- PHY REGISTER AND MEMORY SIZE CAPS --------------------------*/
 #define SOC_PHY_DIG_REGS_MEM_SIZE       (21*4)
 #define SOC_MAC_BB_PD_MEM_SIZE          (192*4)
@@ -421,3 +429,6 @@
 #define SOC_BLE_50_SUPPORTED		(1)    /*!< Support Bluetooth 5.0 */
 #define SOC_BLE_DEVICE_PRIVACY_SUPPORTED (1)   /*!< Support BLE device privacy mode */
 #define SOC_BLUFI_SUPPORTED             (1)    /*!< Support BLUFI */
+
+/*------------------------------------- PHY CAPS -------------------------------------*/
+#define SOC_PHY_COMBO_MODULE                  (1) /*!< Support Wi-Fi and BLE*/

@@ -198,7 +198,10 @@
 
 /*-------------------------- RTCIO CAPS --------------------------------------*/
 #define SOC_RTCIO_PIN_COUNT                 8
-#define SOC_RTCIO_INPUT_OUTPUT_SUPPORTED    1
+#define SOC_RTCIO_INPUT_OUTPUT_SUPPORTED    1  /* This macro indicates that the target has separate RTC IOMUX hardware feature,
+                                                * so it supports unique IOMUX configuration (including IE, OE, PU, PD, DRV etc.)
+                                                * when the pins are switched to RTC function.
+                                                */
 #define SOC_RTCIO_HOLD_SUPPORTED            1
 #define SOC_RTCIO_WAKE_SUPPORTED            1
 
@@ -212,6 +215,7 @@
 #define SOC_I2C_NUM                 (1U)
 
 #define SOC_I2C_FIFO_LEN            (32) /*!< I2C hardware FIFO depth */
+#define SOC_I2C_CMD_REG_NUM         (8)  /*!< Number of I2C command registers */
 #define SOC_I2C_SUPPORT_SLAVE       (1)
 
 // FSM_RST only resets the FSM, not using it. So SOC_I2C_SUPPORT_HW_FSM_RST not defined.
@@ -400,6 +404,9 @@
 #define SOC_TIMER_GROUP_TOTAL_TIMERS      (2)
 #define SOC_TIMER_SUPPORT_ETM             (1)
 
+/*--------------------------- WATCHDOG CAPS ---------------------------------------*/
+#define SOC_MWDT_SUPPORT_XTAL              (1)
+
 /*-------------------------- TWAI CAPS ---------------------------------------*/
 #define SOC_TWAI_CONTROLLER_NUM         2
 #define SOC_TWAI_CLK_SUPPORT_XTAL       1
@@ -448,6 +455,10 @@
 /*-------------------------- COEXISTENCE HARDWARE PTI CAPS -------------------------------*/
 #define SOC_COEX_HW_PTI                 (1)
 
+/*-------------------------- EXTERNAL COEXISTENCE CAPS -------------------------------------*/
+#define SOC_EXTERNAL_COEX_ADVANCE              (1) /*!< HARDWARE ADVANCED EXTERNAL COEXISTENCE CAPS */
+#define SOC_EXTERNAL_COEX_LEADER_TX_LINE       (0) /*!< EXTERNAL COEXISTENCE TX LINE CAPS */
+
 /*--------------- PHY REGISTER AND MEMORY SIZE CAPS --------------------------*/
 #define SOC_PHY_DIG_REGS_MEM_SIZE       (21*4)
 
@@ -468,6 +479,7 @@
 #define SOC_PM_SUPPORT_RC_FAST_PD       (1)
 #define SOC_PM_SUPPORT_VDDSDIO_PD       (1)
 #define SOC_PM_SUPPORT_TOP_PD           (1)
+#define SOC_PM_SUPPORT_HP_AON_PD        (1)
 #define SOC_PM_SUPPORT_MAC_BB_PD        (1)
 #define SOC_PM_SUPPORT_RTC_PERIPH_PD    (1)
 
@@ -499,7 +511,7 @@
 
 /*------------------------------------ WI-FI CAPS ------------------------------------*/
 #define SOC_WIFI_HW_TSF                     (1)    /*!< Support hardware TSF */
-#define SOC_WIFI_FTM_SUPPORT                (1)    /*!< Support FTM */
+#define SOC_WIFI_FTM_SUPPORT                (0)    /*!< Support FTM */
 #define SOC_WIFI_GCMP_SUPPORT               (1)    /*!< Support GCMP(GCMP128 and GCMP256) */
 #define SOC_WIFI_WAPI_SUPPORT               (1)    /*!< Support WAPI */
 #define SOC_WIFI_CSI_SUPPORT                (1)    /*!< Support CSI */
@@ -513,4 +525,11 @@
 #define SOC_BLE_50_SUPPORTED            (1)    /*!< Support Bluetooth 5.0 */
 #define SOC_BLE_DEVICE_PRIVACY_SUPPORTED (1)   /*!< Support BLE device privacy mode */
 #define SOC_BLE_POWER_CONTROL_SUPPORTED (1)    /*!< Support Bluetooth Power Control */
+#define SOC_BLE_PERIODIC_ADV_ENH_SUPPORTED  (1)    /*!< Support For BLE Periodic Adv Enhancements */
 #define SOC_BLUFI_SUPPORTED             (1)    /*!< Support BLUFI */
+#define SOC_BLE_MULTI_CONN_OPTIMIZATION (1)    /*!< Support multiple connections optimization */
+
+#define SOC_BLE_USE_WIFI_PWR_CLK_WORKAROUND (1)
+
+/*------------------------------------- PHY CAPS -------------------------------------*/
+#define SOC_PHY_COMBO_MODULE                  (1) /*!< Support Wi-Fi, BLE and 15.4*/

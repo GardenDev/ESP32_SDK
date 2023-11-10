@@ -15,6 +15,14 @@ menu "LWIP"
             could be used to convert network interface index to name
             instead of IDF specific esp-netif APIs (such as esp_netif_get_netif_impl_name())
 
+    config LWIP_TCPIP_TASK_PRIO
+        int "LWIP TCP/IP Task Priority"
+        default 18
+        range 1 24
+        help
+            LWIP tcpip task priority. In case of high throughput, this parameter
+            could be changed up to (configMAX_PRIORITIES-1).
+
     config LWIP_TCPIP_CORE_LOCKING
         bool "Enable tcpip core locking"
         default n
@@ -25,6 +33,15 @@ menu "LWIP"
             See LOCK_TCPIP_CORE() and UNLOCK_TCPIP_CORE().
 
             If disable tcpip core locking,TCP IP will perform tasks through context switching
+
+    config LWIP_TCPIP_CORE_LOCKING_INPUT
+        bool "Enable tcpip core locking input"
+        depends on LWIP_TCPIP_CORE_LOCKING
+        default n
+        help
+            when LWIP_TCPIP_CORE_LOCKING is enabled, this lets tcpip_input() grab the
+            mutex for input packets as well, instead of allocating a message and passing
+            it to tcpip_thread.
 
     config LWIP_CHECK_THREAD_SAFETY
         bool "Checks that lwip API runs in expected context"
@@ -70,6 +87,14 @@ menu "LWIP"
 
             If this feature is disabled, all lwip functions will be put into FLASH.
 
+    config LWIP_EXTRA_IRAM_OPTIMIZATION
+        bool "Enable LWIP IRAM optimization for TCP part"
+        default n
+        help
+            If this feature is enabled, some tcp part functions relating to RX/TX in LWIP will be
+            put into IRAM, it can improve TCP throughput. On the other hand, it needs about 17KB
+            IRAM for these optimizations.
+
     config LWIP_TIMERS_ONDEMAND
         bool "Enable LWIP Timers on demand"
         default y
@@ -79,6 +104,14 @@ menu "LWIP"
 
             This feature will reduce the power consumption for applications which do not
             use IGMP and MLD6.
+
+    config LWIP_ND6
+        bool "LWIP NDP6 Enable/Disable"
+        default y
+        depends on LWIP_IPV6
+        help
+            This option is used to disable the Network Discovery Protocol (NDP) if it is not required.
+            Please use this option with caution, as the NDP is essential for IPv6 functionality within a local network.
 
     config LWIP_MAX_SOCKETS
         int "Max number of open sockets"
@@ -1020,6 +1053,26 @@ menu "LWIP"
             config LWIP_HOOK_ND6_GET_GW_DEFAULT
                 bool "Default (weak) implementation"
             config LWIP_HOOK_ND6_GET_GW_CUSTOM
+                bool "Custom implementation"
+
+        endchoice
+
+        choice LWIP_HOOK_IP6_SELECT_SRC_ADDR
+            prompt "IPv6 source address selection Hook"
+            depends on LWIP_IPV6
+            default LWIP_HOOK_IP6_SELECT_SRC_ADDR_NONE
+            help
+                Enables custom IPv6 source address selection.
+                Setting this to "default" provides weak implementation
+                stub that could be overwritten in application code.
+                Setting this to "custom" provides hook's declaration
+                only and expects the application to implement it.
+
+            config LWIP_HOOK_IP6_SELECT_SRC_ADDR_NONE
+                bool "No hook declared"
+            config LWIP_HOOK_IP6_SELECT_SRC_ADDR_DEFAULT
+                bool "Default (weak) implementation"
+            config LWIP_HOOK_IP6_SELECT_SRC_ADDR_CUSTOM
                 bool "Custom implementation"
 
         endchoice

@@ -23,7 +23,11 @@ else()
 
     # Override regi2c implementation in ROM
     if(CONFIG_ESP_ROM_HAS_REGI2C_BUG OR CONFIG_ESP_ROM_WITHOUT_REGI2C)
-        list(APPEND sources "patches/esp_rom_regi2c_${target}.c")
+        if(target STREQUAL "esp32c6")
+            list(APPEND sources "patches/esp_rom_hp_regi2c_${target}.c")
+        else()
+            list(APPEND sources "patches/esp_rom_regi2c_${target}.c")
+        endif()
     endif()
 
     if(CONFIG_HEAP_TLSF_USE_ROM_IMPL AND CONFIG_ESP_ROM_TLSF_CHECK_PATCH)
@@ -46,8 +50,12 @@ if(CONFIG_HAL_WDT_USE_ROM_IMPL)
     list(APPEND sources "patches/esp_rom_wdt.c")
 endif()
 
-if(CONFIG_ESP_ROM_HAS_FLASH_COUNT_PAGES_BUG)
+if(CONFIG_ESP_ROM_HAS_FLASH_COUNT_PAGES_BUG OR CONFIG_ESP_ROM_HAS_CACHE_WRITEBACK_BUG)
     list(APPEND sources "patches/esp_rom_cache_esp32s2_esp32s3.c")
+endif()
+
+if(CONFIG_ESP_ROM_HAS_CACHE_WRITEBACK_BUG)
+    list(APPEND sources "patches/esp_rom_cache_writeback_esp32s3.S")
 endif()
 
 idf_component_register(SRCS ${sources}

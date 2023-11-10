@@ -2,6 +2,7 @@ if(CONFIG_BT_ENABLED)
 
     set(srcs "")
     set(include_dirs "")
+    set(ldfragments "linker.lf")
 
     if(CONFIG_IDF_TARGET_ESP32)
         list(APPEND srcs "controller/esp32/bt.c"
@@ -18,6 +19,7 @@ if(CONFIG_BT_ENABLED)
         list(APPEND include_dirs include/esp32c3/include)
 
     elseif(CONFIG_IDF_TARGET_ESP32C2)
+        set(ldfragments "linker.lf.esp32c2")
         list(APPEND srcs "controller/esp32c2/bt.c")
         list(APPEND include_dirs include/esp32c2/include)
 
@@ -528,9 +530,11 @@ if(CONFIG_BT_ENABLED)
                     host/nimble/nimble/nimble/host/services/gap/include
                     host/nimble/nimble/nimble/host/services/gatt/include
                     host/nimble/nimble/nimble/host/services/hr/include
+                    host/nimble/nimble/nimble/host/services/htp/include
                     host/nimble/nimble/nimble/host/services/ias/include
                     host/nimble/nimble/nimble/host/services/ipss/include
                     host/nimble/nimble/nimble/host/services/lls/include
+                    host/nimble/nimble/nimble/host/services/prox/include
                     host/nimble/nimble/nimble/host/services/tps/include
                     host/nimble/nimble/nimble/host/util/include
                     host/nimble/nimble/nimble/host/store/ram/include
@@ -545,10 +549,12 @@ if(CONFIG_BT_ENABLED)
                     "host/nimble/nimble/nimble/host/services/ipss/src/ble_svc_ipss.c"
                     "host/nimble/nimble/nimble/host/services/ans/src/ble_svc_ans.c"
                     "host/nimble/nimble/nimble/host/services/hr/src/ble_svc_hr.c"
+                    "host/nimble/nimble/nimble/host/services/htp/src/ble_svc_htp.c"
                     "host/nimble/nimble/nimble/host/services/gap/src/ble_svc_gap.c"
                     "host/nimble/nimble/nimble/host/services/bas/src/ble_svc_bas.c"
                     "host/nimble/nimble/nimble/host/services/dis/src/ble_svc_dis.c"
                     "host/nimble/nimble/nimble/host/services/lls/src/ble_svc_lls.c"
+                    "host/nimble/nimble/nimble/host/services/prox/src/ble_svc_prox.c"
                     "host/nimble/nimble/nimble/host/src/ble_hs_conn.c"
                     "host/nimble/nimble/nimble/host/src/ble_store_util.c"
                     "host/nimble/nimble/nimble/host/src/ble_sm.c"
@@ -567,6 +573,8 @@ if(CONFIG_BT_ENABLED)
                     "host/nimble/nimble/nimble/host/src/ble_hs_mqueue.c"
                     "host/nimble/nimble/nimble/host/src/ble_hs_periodic_sync.c"
                     "host/nimble/nimble/nimble/host/src/ble_att.c"
+                    "host/nimble/nimble/nimble/host/src/ble_ead.c"
+                    "host/nimble/nimble/nimble/host/src/ble_aes_ccm.c"
                     "host/nimble/nimble/nimble/host/src/ble_gattc.c"
                     "host/nimble/nimble/nimble/host/src/ble_store.c"
                     "host/nimble/nimble/nimble/host/src/ble_sm_lgcy.c"
@@ -689,13 +697,12 @@ if(CONFIG_BT_ENABLED)
 
 endif()
 
-# requirements can't depend on config
 idf_component_register(SRCS "${srcs}"
-                INCLUDE_DIRS "${include_dirs}"
-                PRIV_INCLUDE_DIRS "${priv_include_dirs}"
-                REQUIRES esp_timer esp_wifi
-                PRIV_REQUIRES nvs_flash soc esp_pm esp_phy esp_coex mbedtls driver vfs
-                LDFRAGMENTS "linker.lf")
+                       INCLUDE_DIRS "${include_dirs}"
+                       PRIV_INCLUDE_DIRS "${priv_include_dirs}"
+                       REQUIRES esp_timer esp_wifi
+                       PRIV_REQUIRES nvs_flash soc esp_pm esp_phy esp_coex mbedtls driver vfs
+                       LDFRAGMENTS "${ldfragments}")
 
 if(CONFIG_BT_ENABLED)
     target_compile_options(${COMPONENT_LIB} PRIVATE -Wno-implicit-fallthrough -Wno-unused-const-variable)

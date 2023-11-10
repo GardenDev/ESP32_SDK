@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2019-2022 Espressif Systems (Shanghai) CO LTD
+ * SPDX-FileCopyrightText: 2019-2023 Espressif Systems (Shanghai) CO LTD
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -177,6 +177,7 @@
 #define SOC_I2C_NUM            (2)
 
 #define SOC_I2C_FIFO_LEN       (32) /*!< I2C hardware FIFO depth */
+#define SOC_I2C_CMD_REG_NUM         (8)  /*!< Number of I2C command registers */
 #define SOC_I2C_SUPPORT_SLAVE       (1)
 
 // FSM_RST only resets the FSM, not using it. So SOC_I2C_SUPPORT_HW_FSM_RST not defined.
@@ -274,7 +275,10 @@
 
 /*-------------------------- RTCIO CAPS --------------------------------------*/
 #define SOC_RTCIO_PIN_COUNT   22
-#define SOC_RTCIO_INPUT_OUTPUT_SUPPORTED 1
+#define SOC_RTCIO_INPUT_OUTPUT_SUPPORTED 1  /* This macro indicates that the target has separate RTC IOMUX hardware feature,
+                                             * so it supports unique IOMUX configuration (including IE, OE, PU, PD, DRV etc.)
+                                             * when the pins are switched to RTC function.
+                                             */
 #define SOC_RTCIO_HOLD_SUPPORTED 1
 #define SOC_RTCIO_WAKE_SUPPORTED 1
 
@@ -479,6 +483,10 @@
 /*-------------------------- COEXISTENCE HARDWARE PTI CAPS -------------------------------*/
 #define SOC_COEX_HW_PTI                 (1)
 
+/*-------------------------- EXTERNAL COEXISTENCE CAPS -------------------------------------*/
+#define SOC_EXTERNAL_COEX_ADVANCE              (0) /*!< HARDWARE ADVANCED EXTERNAL COEXISTENCE CAPS */
+#define SOC_EXTERNAL_COEX_LEADER_TX_LINE       (1) /*!< EXTERNAL COEXISTENCE TX LINE CAPS */
+
 /*-------------------------- SDMMC CAPS -----------------------------------------*/
 
 /* Card detect, write protect, interrupt use GPIO Matrix on all chips.
@@ -510,3 +518,6 @@
 
 /*-------------------------- ULP CAPS ----------------------------------------*/
 #define SOC_ULP_HAS_ADC                     (1)    /* ADC can be accessed from ULP */
+
+/*------------------------------------- PHY CAPS -------------------------------------*/
+#define SOC_PHY_COMBO_MODULE                  (1) /*!< Support Wi-Fi and BLE*/

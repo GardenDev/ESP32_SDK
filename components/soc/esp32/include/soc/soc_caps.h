@@ -138,7 +138,8 @@
 #endif
 
 /*-------------------------- CACHE CAPS --------------------------------------*/
-#define SOC_SHARED_IDCACHE_SUPPORTED            1   //Shared Cache for both instructions and data
+#define SOC_SHARED_IDCACHE_SUPPORTED            1   //Shared Cache for both instructions and data within one core
+#define SOC_IDCACHE_PER_CORE                    1   //Independent Cache unit pre core
 
 /*-------------------------- CPU CAPS ----------------------------------------*/
 #define SOC_CPU_CORES_NUM               2
@@ -176,6 +177,7 @@
 #define SOC_I2C_NUM             (2)
 
 #define SOC_I2C_FIFO_LEN        (32) /*!< I2C hardware FIFO depth */
+#define SOC_I2C_CMD_REG_NUM     (16) /*!< Number of I2C command registers */
 #define SOC_I2C_SUPPORT_SLAVE   (1)
 
 #define SOC_I2C_SUPPORT_APB     (1)
@@ -417,3 +419,6 @@
 
 /*-------------------------- ULP CAPS ----------------------------------------*/
 #define SOC_ULP_HAS_ADC                     (1)    /* ADC can be accessed from ULP */
+
+/*------------------------------------- PHY CAPS -------------------------------------*/
+#define SOC_PHY_COMBO_MODULE                  (1) /*!< Support Wi-Fi, BT and BLE*/

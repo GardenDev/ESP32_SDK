@@ -177,6 +177,7 @@ INPUT = \
     $(PROJECT_PATH)/components/esp_system/include/esp_system.h \
     $(PROJECT_PATH)/components/esp_system/include/esp_systick_etm.h \
     $(PROJECT_PATH)/components/esp_system/include/esp_task_wdt.h \
+    $(PROJECT_PATH)/components/esp_system/include/esp_task.h \
     $(PROJECT_PATH)/components/esp_timer/include/esp_timer.h \
     $(PROJECT_PATH)/components/esp_wifi/include/esp_mesh.h \
     $(PROJECT_PATH)/components/esp_wifi/include/esp_now.h \
@@ -184,6 +185,11 @@ INPUT = \
     $(PROJECT_PATH)/components/esp_wifi/include/esp_wifi_default.h \
     $(PROJECT_PATH)/components/esp_wifi/include/esp_wifi_types.h \
     $(PROJECT_PATH)/components/esp_wifi/include/esp_wifi.h \
+    $(PROJECT_PATH)/components/wpa_supplicant/esp_supplicant/include/esp_mbo.h  \
+    $(PROJECT_PATH)/components/wpa_supplicant/esp_supplicant/include/esp_eap_client.h \
+    $(PROJECT_PATH)/components/wpa_supplicant/esp_supplicant/include/esp_rrm.h \
+    $(PROJECT_PATH)/components/wpa_supplicant/esp_supplicant/include/esp_wnm.h \
+    $(PROJECT_PATH)/components/wpa_supplicant/esp_supplicant/include/esp_wps.h \
     $(PROJECT_PATH)/components/esp_wifi/wifi_apps/include/esp_nan.h \
     $(PROJECT_PATH)/components/esp-tls/esp_tls_errors.h \
     $(PROJECT_PATH)/components/esp-tls/esp_tls.h \

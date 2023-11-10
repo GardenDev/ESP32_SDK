@@ -423,7 +423,6 @@ components/esp_hid/private/bt_hidd.h
 components/esp_hid/private/bt_hidh.h
 components/esp_hid/private/esp_hidd_private.h
 components/esp_hid/src/esp_hid_common.c
-components/esp_hid/src/esp_hidd.c
 components/esp_hid/test/hid_descriptor.h
 components/esp_hid/test/test_esp_hid.c
 components/esp_hw_support/include/esp_clk.h
@@ -485,7 +484,6 @@ components/esp_rom/include/esp32c3/rom/crc.h
 components/esp_rom/include/esp32c3/rom/digital_signature.h
 components/esp_rom/include/esp32c3/rom/esp_flash.h
 components/esp_rom/include/esp32c3/rom/hmac.h
-components/esp_rom/include/esp32c3/rom/rom_layout.h
 components/esp_rom/include/esp32c3/rom/rsa_pss.h
 components/esp_rom/include/esp32c3/rom/sha.h
 components/esp_rom/include/esp32c3/rom/tjpgd.h
@@ -514,7 +512,6 @@ components/esp_rom/include/esp32s3/rom/crc.h
 components/esp_rom/include/esp32s3/rom/digital_signature.h
 components/esp_rom/include/esp32s3/rom/hmac.h
 components/esp_rom/include/esp32s3/rom/opi_flash.h
-components/esp_rom/include/esp32s3/rom/rom_layout.h
 components/esp_rom/include/esp32s3/rom/rsa_pss.h
 components/esp_rom/include/esp32s3/rom/sha.h
 components/esp_rom/include/esp32s3/rom/tjpgd.h
@@ -1631,7 +1628,6 @@ examples/wifi/roaming/main/roaming_example.c
 examples/wifi/scan/main/scan.c
 examples/wifi/smart_config/main/smartconfig_main.c
 examples/wifi/wifi_easy_connect/dpp-enrollee/main/dpp_enrollee_main.c
-examples/wifi/wifi_enterprise/main/wifi_enterprise_main.c
 examples/wifi/wps/main/wps.c
 tools/ble/lib_ble_client.py
 tools/ble/lib_gap.py
@@ -1682,8 +1678,6 @@ tools/test_apps/system/longjmp_test/app_test.py
 tools/test_apps/system/longjmp_test/main/hello_world_main.c
 tools/test_apps/system/memprot/app_test.py
 tools/test_apps/system/memprot/main/esp32s2/test_memprot_main.c
-tools/test_apps/system/monitor_ide_integration/app_test.py
-tools/test_apps/system/monitor_ide_integration/main/main.c
 tools/test_apps/system/no_embedded_paths/check_for_file_paths.py
 tools/test_apps/system/no_embedded_paths/main/test_no_embedded_paths_main.c
 tools/test_apps/system/panic/app_test.py

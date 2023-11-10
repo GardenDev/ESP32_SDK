@@ -267,6 +267,10 @@ config SOC_I2C_FIFO_LEN
     int
     default 16
 
+config SOC_I2C_CMD_REG_NUM
+    int
+    default 8
+
 config SOC_I2C_SUPPORT_HW_CLR_BUS
     bool
     default y
@@ -507,6 +511,10 @@ config SOC_TIMER_GROUP_TOTAL_TIMERS
     int
     default 1
 
+config SOC_MWDT_SUPPORT_XTAL
+    bool
+    default y
+
 config SOC_EFUSE_DIS_DOWNLOAD_ICACHE
     bool
     default y
@@ -587,6 +595,10 @@ config SOC_EXTERNAL_COEX_ADVANCE
     bool
     default y
 
+config SOC_EXTERNAL_COEX_LEADER_TX_LINE
+    bool
+    default n
+
 config SOC_PHY_DIG_REGS_MEM_SIZE
     int
     default 21
@@ -631,6 +643,10 @@ config SOC_WIFI_HW_TSF
     bool
     default y
 
+config SOC_WIFI_FTM_SUPPORT
+    bool
+    default y
+
 config SOC_WIFI_SUPPORT_VARIABLE_BEACON_WINDOW
     bool
     default y
@@ -660,5 +676,9 @@ config SOC_BLUFI_SUPPORTED
     default y
 
 config SOC_PHY_IMPROVE_RX_11B
+    bool
+    default y
+
+config SOC_PHY_COMBO_MODULE
     bool
     default y

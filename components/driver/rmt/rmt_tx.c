@@ -205,10 +205,16 @@ esp_err_t rmt_new_tx_channel(const rmt_tx_channel_config_t *config, rmt_channel_
 #endif
     esp_err_t ret = ESP_OK;
     rmt_tx_channel_t *tx_channel = NULL;
+    // Check if priority is valid
+    if (config->intr_priority) {
+        ESP_RETURN_ON_FALSE((config->intr_priority) > 0, ESP_ERR_INVALID_ARG, TAG, "invalid interrupt priority:%d", config->intr_priority);
+        ESP_RETURN_ON_FALSE(1 << (config->intr_priority) & RMT_ALLOW_INTR_PRIORITY_MASK, ESP_ERR_INVALID_ARG, TAG, "invalid interrupt priority:%d", config->intr_priority);
+    }
     ESP_GOTO_ON_FALSE(config && ret_chan && config->resolution_hz && config->trans_queue_depth, ESP_ERR_INVALID_ARG, err, TAG, "invalid argument");
     ESP_GOTO_ON_FALSE(GPIO_IS_VALID_GPIO(config->gpio_num), ESP_ERR_INVALID_ARG, err, TAG, "invalid GPIO number");
     ESP_GOTO_ON_FALSE((config->mem_block_symbols & 0x01) == 0 && config->mem_block_symbols >= SOC_RMT_MEM_WORDS_PER_CHANNEL,
                       ESP_ERR_INVALID_ARG, err, TAG, "mem_block_symbols must be even and at least %d", SOC_RMT_MEM_WORDS_PER_CHANNEL);
+
 #if SOC_RMT_SUPPORT_DMA
     // we only support 2 nodes ping-pong, if the configured memory block size needs more than two DMA descriptors, should treat it as invalid
     ESP_GOTO_ON_FALSE(config->mem_block_symbols <= RMT_DMA_DESC_BUF_MAX_SIZE * RMT_DMA_NODES_PING_PONG / sizeof(rmt_symbol_word_t),
@@ -234,20 +240,24 @@ esp_err_t rmt_new_tx_channel(const rmt_tx_channel_config_t *config, rmt_channel_
     rmt_hal_context_t *hal = &group->hal;
     int channel_id = tx_channel->base.channel_id;
     int group_id = group->group_id;
-    // select the clock source
-    ESP_GOTO_ON_ERROR(rmt_select_periph_clock(&tx_channel->base, config->clk_src), err, TAG, "set group clock failed");
 
     // reset channel, make sure the TX engine is not working, and events are cleared
     portENTER_CRITICAL(&group->spinlock);
     rmt_hal_tx_channel_reset(&group->hal, channel_id);
     portEXIT_CRITICAL(&group->spinlock);
-
-    // install interrupt service
+    // install tx interrupt
+    // --- install interrupt service
     // interrupt is mandatory to run basic RMT transactions, so it's not lazy installed in `rmt_tx_register_event_callbacks()`
-    int isr_flags = RMT_INTR_ALLOC_FLAG;
+    // 1-- Set user specified priority to `group->intr_priority`
+    bool priority_conflict = rmt_set_intr_priority_to_group(group, config->intr_priority);
+    ESP_GOTO_ON_FALSE(!priority_conflict, ESP_ERR_INVALID_ARG, err, TAG, "intr_priority conflict");
+    // 2-- Get interrupt allocation flag
+    int isr_flags = rmt_get_isr_flags(group);
+    // 3-- Allocate interrupt using isr_flag
     ret = esp_intr_alloc_intrstatus(rmt_periph_signals.groups[group_id].irq, isr_flags,
-                                    (uint32_t)rmt_ll_get_interrupt_status_reg(hal->regs),
-                                    RMT_LL_EVENT_TX_MASK(channel_id), rmt_tx_default_isr, tx_channel, &tx_channel->base.intr);
+                                    (uint32_t) rmt_ll_get_interrupt_status_reg(hal->regs),
+                                    RMT_LL_EVENT_TX_MASK(channel_id), rmt_tx_default_isr, tx_channel,
+                                    &tx_channel->base.intr);
     ESP_GOTO_ON_ERROR(ret, err, TAG, "install tx interrupt failed");
     // install DMA service
 #if SOC_RMT_SUPPORT_DMA
@@ -255,6 +265,8 @@ esp_err_t rmt_new_tx_channel(const rmt_tx_channel_config_t *config, rmt_channel_
         ESP_GOTO_ON_ERROR(rmt_tx_init_dma_link(tx_channel, config), err, TAG, "install tx DMA failed");
     }
 #endif
+    // select the clock source
+    ESP_GOTO_ON_ERROR(rmt_select_periph_clock(&tx_channel->base, config->clk_src), err, TAG, "set group clock failed");
     // set channel clock resolution
     uint32_t real_div = group->resolution_hz / config->resolution_hz;
     rmt_ll_tx_set_channel_clock_div(hal->regs, channel_id, real_div);
@@ -278,7 +290,7 @@ esp_err_t rmt_new_tx_channel(const rmt_tx_channel_config_t *config, rmt_channel_
     tx_channel->base.gpio_num = config->gpio_num;
     gpio_config_t gpio_conf = {
         .intr_type = GPIO_INTR_DISABLE,
-        // also enable the input path is `io_loop_back` is on, this is useful for bi-directional buses
+        // also enable the input path if `io_loop_back` is on, this is useful for bi-directional buses
         .mode = (config->flags.io_od_mode ? GPIO_MODE_OUTPUT_OD : GPIO_MODE_OUTPUT) | (config->flags.io_loop_back ? GPIO_MODE_INPUT : 0),
         .pull_down_en = false,
         .pull_up_en = true,
@@ -465,6 +477,10 @@ esp_err_t rmt_transmit(rmt_channel_handle_t channel, rmt_encoder_t *encoder, con
 #if !SOC_RMT_SUPPORT_TX_LOOP_COUNT
     ESP_RETURN_ON_FALSE(config->loop_count <= 0, ESP_ERR_NOT_SUPPORTED, TAG, "loop count is not supported");
 #endif // !SOC_RMT_SUPPORT_TX_LOOP_COUNT
+#if CONFIG_RMT_ISR_IRAM_SAFE
+    // payload is retrieved by the encoder, we should make sure it's still accessible even when the cache is disabled
+    ESP_RETURN_ON_FALSE(esp_ptr_internal(payload), ESP_ERR_INVALID_ARG, TAG, "payload not in internal RAM");
+#endif
     rmt_group_t *group = channel->group;
     rmt_hal_context_t *hal = &group->hal;
     int channel_id = channel->channel_id;

@@ -323,6 +323,7 @@ The following binary size optimizations apply to a particular component or a fun
 
     - Disabling :ref:`CONFIG_ESP_WIFI_ENABLE_WPA3_SAE` will save some Wi-Fi binary size if WPA3 support is not needed. (Note that WPA3 is mandatory for new Wi-Fi device certifications.)
     - Disabling :ref:`CONFIG_ESP_WIFI_SOFTAP_SUPPORT` will save some Wi-Fi binary size if soft-AP support is not needed.
+    - Disabling :ref:`CONFIG_ESP_WIFI_ENTERPRISE_SUPPORT` will save some Wi-Fi binary size if enterprise support is not needed.
 
 .. only:: esp32
 
@@ -414,6 +415,8 @@ These include:
 - :ref:`CONFIG_MBEDTLS_CCM_C`
 - :ref:`CONFIG_MBEDTLS_GCM_C`
 - :ref:`CONFIG_MBEDTLS_ECP_C` (Alternatively: Leave this option enabled but disable some of the elliptic curves listed in the sub-menu.)
+- :ref:`CONFIG_MBEDTLS_ECP_NIST_OPTIM`
+- :ref:`CONFIG_MBEDTLS_ECP_FIXED_POINT_OPTIM`
 - Change :ref:`CONFIG_MBEDTLS_TLS_MODE` if both server & client functionalities are not needed
 - Consider disabling some ciphersuites listed in the "TLS Key Exchange Methods" sub-menu (i.e. :ref:`CONFIG_MBEDTLS_KEY_EXCHANGE_RSA`)
 

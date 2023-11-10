@@ -29,12 +29,14 @@ extern "C" {
 #endif
 
 #if CONFIG_MCPWM_ISR_IRAM_SAFE
-#define MCPWM_INTR_ALLOC_FLAG     (ESP_INTR_FLAG_LOWMED | ESP_INTR_FLAG_SHARED | ESP_INTR_FLAG_INTRDISABLED | ESP_INTR_FLAG_IRAM)
+#define MCPWM_INTR_ALLOC_FLAG     (ESP_INTR_FLAG_SHARED | ESP_INTR_FLAG_INTRDISABLED | ESP_INTR_FLAG_IRAM)
 #else
-#define MCPWM_INTR_ALLOC_FLAG     (ESP_INTR_FLAG_LOWMED | ESP_INTR_FLAG_SHARED | ESP_INTR_FLAG_INTRDISABLED)
+#define MCPWM_INTR_ALLOC_FLAG     (ESP_INTR_FLAG_SHARED | ESP_INTR_FLAG_INTRDISABLED)
 #endif
 
-#define MCPWM_PERIPH_CLOCK_PRE_SCALE (2)
+#define MCPWM_ALLOW_INTR_PRIORITY_MASK ESP_INTR_FLAG_LOWMED
+
+#define MCPWM_GROUP_CLOCK_DEFAULT_PRESCALE 2
 #define MCPWM_PM_LOCK_NAME_LEN_MAX 16
 
 typedef struct mcpwm_group_t mcpwm_group_t;
@@ -54,9 +56,11 @@ typedef struct mcpwm_cap_channel_t mcpwm_cap_channel_t;
 
 struct mcpwm_group_t {
     int group_id;            // group ID, index from 0
+    int intr_priority;       // MCPWM interrupt priority
     mcpwm_hal_context_t hal; // HAL instance is at group level
     portMUX_TYPE spinlock;   // group level spinlock
-    uint32_t resolution_hz;  // MCPWM group clock resolution
+    uint32_t prescale;       // group prescale
+    uint32_t resolution_hz;  // MCPWM group clock resolution: clock_src_hz / clock_prescale = resolution_hz
     esp_pm_lock_handle_t pm_lock; // power management lock
     soc_module_clk_t clk_src; // peripheral source clock
     mcpwm_cap_timer_t *cap_timer; // mcpwm capture timers
@@ -225,7 +229,10 @@ struct mcpwm_cap_channel_t {
 
 mcpwm_group_t *mcpwm_acquire_group_handle(int group_id);
 void mcpwm_release_group_handle(mcpwm_group_t *group);
+esp_err_t mcpwm_check_intr_priority(mcpwm_group_t *group, int intr_priority);
+int mcpwm_get_intr_priority_flag(mcpwm_group_t *group);
 esp_err_t mcpwm_select_periph_clock(mcpwm_group_t *group, soc_module_clk_t clk_src);
+esp_err_t mcpwm_set_prescale(mcpwm_group_t *group, uint32_t expect_module_resolution_hz, uint32_t module_prescale_max, uint32_t* ret_module_prescale);
 
 #ifdef __cplusplus
 }

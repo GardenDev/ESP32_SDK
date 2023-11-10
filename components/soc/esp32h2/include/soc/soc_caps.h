@@ -67,6 +67,10 @@
 #define SOC_BOD_SUPPORTED               1
 #define SOC_APM_SUPPORTED               1
 #define SOC_PMU_SUPPORTED               1
+#define SOC_LP_TIMER_SUPPORTED          1
+#define SOC_LP_AON_SUPPORTED            1
+#define SOC_PAU_SUPPORTED               1
+#define SOC_CLK_TREE_SUPPORTED          1
 
 /*-------------------------- XTAL CAPS ---------------------------------------*/
 #define SOC_XTAL_SUPPORT_32M            1
@@ -178,14 +182,15 @@
 #define SOC_GPIO_ETM_EVENTS_PER_GROUP 8
 #define SOC_GPIO_ETM_TASKS_PER_GROUP  8
 
-// Target has no full LP IO subsystem, GPIO7~14 remain LP function (powered by VDD3V3_LP, and can be used as deep-sleep wakeup pins)
+// Target has no full LP IO subsystem, GPIO7~14 remain LP function (powered by VDD3V3_LP, and can be used as ext1 wakeup pins)
+// Digital IOs have their own registers to control pullup/down/capability
+// However, there is no way to control pullup/down/capability for IOs under LP function since there is no LP_IOMUX registers
+#define SOC_GPIO_SUPPORT_RTC_INDEPENDENT    (1)
 
-// GPIO7~14 on ESP32H2 can support chip deep sleep wakeup
-#define SOC_GPIO_SUPPORT_DEEPSLEEP_WAKEUP   (1)
+// GPIO7~14 on ESP32H2 can support chip deep sleep wakeup through EXT1 wake up
 
-#define SOC_GPIO_VALID_GPIO_MASK        ((1U<<SOC_GPIO_PIN_COUNT) - 1)
+#define SOC_GPIO_VALID_GPIO_MASK        ((1U << SOC_GPIO_PIN_COUNT) - 1)
 #define SOC_GPIO_VALID_OUTPUT_GPIO_MASK SOC_GPIO_VALID_GPIO_MASK
-#define SOC_GPIO_DEEP_SLEEP_WAKE_VALID_GPIO_MASK        (0ULL | BIT7 | BIT8 | BIT9 | BIT10 | BIT11 | BIT12 | BIT13 | BIT14)
 
 // digital I/O pad powered by VDD3P3_CPU or VDD_SPI(GPIO_NUM_0~6. GPIO_NUM_15~27)
 #define SOC_GPIO_VALID_DIGITAL_IO_PAD_MASK 0x000000000FFF807FULL
@@ -194,6 +199,12 @@
 #define SOC_GPIO_SUPPORT_FORCE_HOLD              (1)
 // Support to hold a single digital I/O when the digital domain is powered off
 #define SOC_GPIO_SUPPORT_HOLD_SINGLE_IO_IN_DSLP  (1)
+
+/*-------------------------- RTCIO CAPS --------------------------------------*/
+/* No dedicated LP_IOMUX subsystem on ESP32-H2. LP functions are still supported
+ * for hold, wake & 32kHz crystal functions - via LP_AON registers */
+#define SOC_RTCIO_PIN_COUNT         (8U)
+#define SOC_RTCIO_HOLD_SUPPORTED    (1)
 
 /*-------------------------- Dedicated GPIO CAPS -----------------------------*/
 #define SOC_DEDIC_GPIO_OUT_CHANNELS_NUM (8) /*!< 8 outward channels on each CPU core */
@@ -208,6 +219,7 @@
 #define SOC_I2C_NUM                 (2U)
 
 #define SOC_I2C_FIFO_LEN            (32) /*!< I2C hardware FIFO depth */
+#define SOC_I2C_CMD_REG_NUM         (8)  /*!< Number of I2C command registers */
 #define SOC_I2C_SUPPORT_SLAVE       (1)
 
 // FSM_RST only resets the FSM, not using it. So SOC_I2C_SUPPORT_HW_FSM_RST not defined.
@@ -296,20 +308,6 @@
 #define SOC_PARLIO_TX_CLK_SUPPORT_GATING     1  /*!< Support gating TX clock */
 #define SOC_PARLIO_TRANS_BIT_ALIGN           1  /*!< Support bit alignment in transaction */
 
-// TODO: IDF-6267 (Copy from esp32c6, need check)
-/*-------------------------- RTC CAPS --------------------------------------*/
-#define SOC_RTC_CNTL_CPU_PD_DMA_BUS_WIDTH       (128)
-#define SOC_RTC_CNTL_CPU_PD_REG_FILE_NUM        (108)
-#define SOC_RTC_CNTL_CPU_PD_DMA_ADDR_ALIGN      (SOC_RTC_CNTL_CPU_PD_DMA_BUS_WIDTH >> 3)
-#define SOC_RTC_CNTL_CPU_PD_DMA_BLOCK_SIZE      (SOC_RTC_CNTL_CPU_PD_DMA_BUS_WIDTH >> 3)
-
-#define SOC_RTC_CNTL_CPU_PD_RETENTION_MEM_SIZE  (SOC_RTC_CNTL_CPU_PD_REG_FILE_NUM * (SOC_RTC_CNTL_CPU_PD_DMA_BUS_WIDTH >> 3))
-
-/*-------------------------- RTCIO CAPS --------------------------------------*/
-/* No dedicated LP_IO subsystem on ESP32-H2. LP functions are still supported
- * for hold, wake & 32kHz crystal functions - via LP_AON registers */
-#define SOC_RTCIO_PIN_COUNT    (0U)
-
 /*--------------------------- RSA CAPS ---------------------------------------*/
 #define SOC_RSA_MAX_BIT_LEN    (3072)
 
@@ -388,6 +386,10 @@
 #define SOC_SYSTIMER_ALARM_MISS_COMPENSATE  1  // Systimer peripheral can generate interrupt immediately if t(target) > t(current)
 #define SOC_SYSTIMER_SUPPORT_ETM            1  // Systimer comparator can generate ETM event
 
+/*-------------------------- LP_TIMER CAPS ----------------------------------*/
+#define SOC_LP_TIMER_BIT_WIDTH_LO           32 // Bit width of lp_timer low part
+#define SOC_LP_TIMER_BIT_WIDTH_HI           16 // Bit width of lp_timer high part
+
 /*--------------------------- TIMER GROUP CAPS ---------------------------------------*/
 #define SOC_TIMER_GROUPS                  (2)
 #define SOC_TIMER_GROUP_TIMERS_PER_GROUP  (1U)
@@ -396,6 +398,9 @@
 #define SOC_TIMER_GROUP_SUPPORT_RC_FAST   (1)
 #define SOC_TIMER_GROUP_TOTAL_TIMERS      (2)
 #define SOC_TIMER_SUPPORT_ETM             (1)
+
+/*--------------------------- WATCHDOG CAPS ---------------------------------------*/
+#define SOC_MWDT_SUPPORT_XTAL              (1)
 
 /*-------------------------- TWAI CAPS ---------------------------------------*/
 #define SOC_TWAI_CONTROLLER_NUM         1
@@ -435,7 +440,7 @@
 
 #define SOC_UART_SUPPORT_RTC_CLK            (1)     /*!< Support RTC clock as the clock source */
 #define SOC_UART_SUPPORT_XTAL_CLK           (1)     /*!< Support XTAL clock as the clock source */
-// #define SOC_UART_SUPPORT_WAKEUP_INT         (1)         /*!< Support UART wakeup interrupt */ // TODO: IDF-6267
+#define SOC_UART_SUPPORT_WAKEUP_INT         (1)     /*!< Support UART wakeup interrupt */
 
 // UART has an extra TX_WAIT_SEND state when the FIFO is not empty and XOFF is enabled
 #define SOC_UART_SUPPORT_FSM_TX_WAIT_SEND   (1)
@@ -444,22 +449,29 @@
 /*-------------------------- COEXISTENCE HARDWARE PTI CAPS -------------------------------*/
 #define SOC_COEX_HW_PTI                 (1)
 
+/*-------------------------- EXTERNAL COEXISTENCE CAPS -------------------------------------*/
+#define SOC_EXTERNAL_COEX_ADVANCE              (1) /*!< HARDWARE ADVANCED EXTERNAL COEXISTENCE CAPS */
+#define SOC_EXTERNAL_COEX_LEADER_TX_LINE       (0) /*!< EXTERNAL COEXISTENCE TX LINE CAPS */
+
 // TODO: IDF-6337
 /*--------------- PHY REGISTER AND MEMORY SIZE CAPS --------------------------*/
 #define SOC_PHY_DIG_REGS_MEM_SIZE       (21*4)
 
-// TODO: IDF-6270 (Copy from esp32c6, need check)
 /*-------------------------- Power Management CAPS ----------------------------*/
-#define SOC_PM_SUPPORT_WIFI_WAKEUP      (1)
 #define SOC_PM_SUPPORT_BT_WAKEUP        (1)
+#define SOC_PM_SUPPORT_EXT1_WAKEUP      (1)
 #define SOC_PM_SUPPORT_CPU_PD           (1)
-#define SOC_PM_SUPPORT_BT_PD            (1)
+#define SOC_PM_SUPPORT_MODEM_PD         (1) /*!<modem includes BLE and 15.4 */
 #define SOC_PM_SUPPORT_XTAL32K_PD       (1)
 #define SOC_PM_SUPPORT_RC32K_PD         (1)
 #define SOC_PM_SUPPORT_RC_FAST_PD       (1)
 #define SOC_PM_SUPPORT_VDDSDIO_PD       (1)
-#define SOC_PM_CPU_RETENTION_BY_RTCCNTL  (1)
+#define SOC_PM_SUPPORT_TOP_PD           (1)
+#define SOC_PM_PAU_LINK_NUM             (4)
+#define SOC_PM_CPU_RETENTION_BY_SW      (1)
+#define SOC_PM_MODEM_RETENTION_BY_REGDMA           (1)
 #define SOC_PM_SUPPORT_DEEPSLEEP_CHECK_STUB_ONLY   (1) /*!<Supports CRC only the stub code in RTC memory */
+#define SOC_PM_RETENTION_HAS_REGDMA_POWER_BUG      (1)
 
 /*-------------------------- CLOCK SUBSYSTEM CAPS ----------------------------------------*/
 #define SOC_CLK_RC_FAST_SUPPORT_CALIBRATION       (1)
@@ -470,8 +482,6 @@
 
 #define SOC_CLK_LP_FAST_SUPPORT_LP_PLL            (1)      /*!< Support LP_PLL clock as the LP_FAST clock source */
 #define SOC_MODEM_CLOCK_IS_INDEPENDENT            (1)
-
-// #define SOC_PM_MODEM_RETENTION_BY_REGDMA    (1) // TODO: IDF-6267
 
 /*-------------------------- Temperature Sensor CAPS -------------------------------------*/
 #define SOC_TEMPERATURE_SENSOR_SUPPORT_FAST_RC                (1)
@@ -485,3 +495,4 @@
 #define SOC_BLE_50_SUPPORTED            (1)    /*!< Support Bluetooth 5.0 */
 #define SOC_BLE_DEVICE_PRIVACY_SUPPORTED (1)   /*!< Support BLE device privacy mode */
 #define SOC_BLE_POWER_CONTROL_SUPPORTED (1)    /*!< Support Bluetooth Power Control */
+#define SOC_BLE_MULTI_CONN_OPTIMIZATION (1)    /*!< Support multiple connections optimization */

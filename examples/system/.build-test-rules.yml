@@ -32,15 +32,9 @@ examples/system/console/basic:
       temporary: true
       reason: lack of runners
 
-examples/system/deep_sleep:
-  disable:
-    - if: IDF_TARGET in ["esp32h2"]
-      temporary: true
-      reason: target(s) not supported yet # IDF-6268
-
 examples/system/deep_sleep_wake_stub:
   disable:
-    - if: IDF_TARGET in ["esp32c2", "esp32h2"]
+    - if: IDF_TARGET in ["esp32c2"]
       temporary: true
       reason: target(s) is not supported yet
 
@@ -89,12 +83,6 @@ examples/system/ipc/ipc_isr:
     - if: IDF_TARGET == "esp32" or IDF_TARGET == "esp32s3"
       temporary: true
       reason: the other targets are not tested yet
-
-examples/system/light_sleep:
-  disable:
-    - if: IDF_TARGET in ["esp32h2"]
-      temporary: true
-      reason: target(s) not supported yet
 
 examples/system/lp_core/lp_i2c:
   enable:

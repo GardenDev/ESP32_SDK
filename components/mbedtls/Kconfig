@@ -982,6 +982,16 @@ menu "mbedTLS"
 
             Disabling this option saves some code size.
 
+    config MBEDTLS_ECP_FIXED_POINT_OPTIM
+        bool "Enable fixed-point multiplication optimisations"
+        depends on MBEDTLS_ECP_C
+        default y
+        help
+            This configuration option enables optimizations to speedup (about 3 ~ 4 times) the ECP
+            fixed point multiplication using pre-computed tables in the flash memory.
+            Disabling this configuration option saves flash footprint (about 29KB if all Elliptic Curve selected)
+            in the application binary.
+
             # end of Elliptic Curve options
 
     config MBEDTLS_POLY1305_C
@@ -1041,17 +1051,5 @@ menu "mbedTLS"
             larger than SOC_RSA_MAX_BIT_LEN. If this is not active
             then the ESP will be unable to process keys greater
             than SOC_RSA_MAX_BIT_LEN.
-
-    menuconfig MBEDTLS_SECURITY_RISKS
-        bool "Show configurations with potential security risks"
-        default n
-
-    config MBEDTLS_ALLOW_UNSUPPORTED_CRITICAL_EXT
-        bool "X.509 CRT parsing with unsupported critical extensions"
-        depends on MBEDTLS_SECURITY_RISKS
-        default n
-        help
-            Allow the X.509 certificate parser to load certificates
-            with unsupported critical extensions
 
 endmenu  # mbedTLS

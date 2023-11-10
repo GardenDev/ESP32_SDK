@@ -3,11 +3,11 @@ ESP32C3 ECO3 ROM address table
 Version 3 API's imported from the ROM
 */
 
-esf_buf_alloc_dynamic = 0x400015c0;
-esf_buf_recycle = 0x400015c4;
+/*esf_buf_alloc_dynamic = 0x400015c0;*/
+/*esf_buf_recycle = 0x400015c4;*/
 /*lmacTxDone = 0x4000162c;*/
 /*ppMapTxQueue = 0x400016d8;*/
-rcGetSched = 0x40001764;
+/*rcGetSched = 0x40001764;*/
 wDevCheckBlockError = 0x400017b4;
 /*ppProcTxDone = 0x40001804;*/
 /*sta_input = rom_sta_input;*/

@@ -19,14 +19,18 @@ endif()
 
 if(NOT CONFIG_APP_BUILD_TYPE_PURE_RAM_APP)
     list(APPEND srcs "mmu_hal.c")
+
+    # We wrap Cache ROM APIs as Cache HAL APIs for: 1. internal ram ; 2. unified APIs
+    # ESP32 cache structure / ROM APIs are different and we have a patch `cache_hal_esp32.c` for it.
+    if(${target} STREQUAL "esp32")
+        list(APPEND srcs "esp32/cache_hal_esp32.c")
+    else()
+        list(APPEND srcs "cache_hal.c")
+    endif()
 endif()
 
-if(NOT ${target} STREQUAL "esp32" AND NOT CONFIG_APP_BUILD_TYPE_PURE_RAM_APP)
-    list(APPEND srcs "cache_hal.c")
-endif()
-
-if(${target} STREQUAL "esp32c6")
-    list(APPEND srcs "esp32c6/lp_timer_hal.c")
+if(CONFIG_SOC_LP_TIMER_SUPPORTED)
+    list(APPEND srcs "lp_timer_hal.c")
 endif()
 
 if(NOT BOOTLOADER_BUILD)
@@ -54,7 +58,7 @@ if(NOT BOOTLOADER_BUILD)
     endif()
 
     if(CONFIG_SOC_GPTIMER_SUPPORTED)
-        list(APPEND srcs "timer_hal.c" "timer_hal_iram.c")
+        list(APPEND srcs "timer_hal.c")
     endif()
 
     if(CONFIG_SOC_LEDC_SUPPORTED)
@@ -131,10 +135,6 @@ if(NOT BOOTLOADER_BUILD)
 
     if(CONFIG_SOC_MODEM_CLOCK_IS_INDEPENDENT)
         list(APPEND srcs "${target}/modem_clock_hal.c")
-    endif()
-
-    if(CONFIG_SOC_LP_TIMER_SUPPORTED)
-        list(APPEND srcs "${target}/lp_timer_hal.c")
     endif()
 
     if(CONFIG_SOC_PAU_SUPPORTED)
@@ -236,7 +236,6 @@ if(NOT BOOTLOADER_BUILD)
 
         list(REMOVE_ITEM srcs
                 "esp32h2/rtc_cntl_hal.c"
-                "esp32h2/pmu_hal.c" # TODO: IDF-6267
                 )
     endif()
 endif()

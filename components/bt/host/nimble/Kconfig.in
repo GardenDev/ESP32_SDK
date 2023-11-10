@@ -65,6 +65,8 @@ config BT_NIMBLE_LOG_LEVEL
 config BT_NIMBLE_MAX_CONNECTIONS
     int "Maximum number of concurrent connections"
     range 1 2 if IDF_TARGET_ESP32C2
+    range 1 70 if IDF_TARGET_ESP32C6
+    range 1 35 if IDF_TARGET_ESP32H2
     range 1 9
     default 2 if IDF_TARGET_ESP32C2
     default 3
@@ -205,6 +207,12 @@ config BT_NIMBLE_DEBUG
     depends on BT_NIMBLE_ENABLED
     help
         This enables extra runtime asserts and host debugging
+
+config BT_NIMBLE_DYNAMIC_SERVICE
+    bool "Enable dynamic services"
+    depends on BT_NIMBLE_ENABLED
+    help
+        This enables user to add/remove Gatt services at runtime
 
 config BT_NIMBLE_SVC_GAP_DEVICE_NAME
     string "BLE GAP default device name"
@@ -596,6 +604,12 @@ config BT_NIMBLE_BLE_POWER_CONTROL
     help
         Set this option to enable the Power Control feature
 
+config BT_NIMBLE_PERIODIC_ADV_ENH
+    bool "Periodic adv enhancements(adi support)"
+    depends on BT_NIMBLE_ENABLE_PERIODIC_ADV && BT_NIMBLE_50_FEATURE_SUPPORT && SOC_BLE_PERIODIC_ADV_ENH_SUPPORTED
+    help
+        Enable the periodic advertising enhancements
+
 choice BT_NIMBLE_COEX_PHY_CODED_TX_RX_TLIM
     prompt "Coexistence: limit on MAX Tx/Rx time for coded-PHY connection"
     default BT_NIMBLE_COEX_PHY_CODED_TX_RX_TLIM_DIS
@@ -667,3 +681,42 @@ config BT_NIMBLE_VS_SUPPORT
     help
         This option is used to enable support for sending Vendor Specific HCI commands and handling
         Vendor Specific HCI Events.
+
+config BT_NIMBLE_OPTIMIZE_MULTI_CONN
+    bool "Enable the optimization of multi-connection"
+    depends on SOC_BLE_MULTI_CONN_OPTIMIZATION
+    select BT_NIMBLE_VS_SUPPORT
+    default n
+    help
+        This option enables the use of vendor-specific APIs for multi-connections, which can
+        greatly enhance the stability of coexistence between numerous central and peripheral
+        devices. It will prohibit the usage of standard APIs.
+
+config BT_NIMBLE_ENC_ADV_DATA
+    bool "Encrypted Advertising Data"
+    depends on SOC_ESP_NIMBLE_CONTROLLER
+    select BT_NIMBLE_EXT_ADV
+    help
+        This option is used to enable encrypted advertising data.
+
+config BT_NIMBLE_MAX_EADS
+    int "Maximum number of EAD devices to save across reboots"
+    default 10
+    depends on BT_NIMBLE_ENABLED && BT_NIMBLE_ENC_ADV_DATA
+    help
+        Defines maximum number of encrypted advertising data key material to save
+
+config BT_NIMBLE_HIGH_DUTY_ADV_ITVL
+    bool "Enable BLE high duty advertising interval feature"
+    depends on BT_NIMBLE_ENABLED
+    help
+        This enable BLE high duty advertising interval feature
+
+config BT_NIMBLE_HOST_QUEUE_CONG_CHECK
+    bool "BLE queue congestion check"
+    depends on BT_NIMBLE_ENABLED
+    default n
+    help
+        When scanning and scan duplicate is not enabled, if there are a lot of adv packets around
+        or application layer handling adv packets is slow, it will cause the controller memory
+        to run out. if enabled, adv packets will be lost when host queue is congested.

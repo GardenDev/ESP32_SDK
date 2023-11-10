@@ -68,6 +68,14 @@
     * 多种外设
     * 内置安全硬件
 
+.. only:: esp32h2
+
+    * 低功耗蓝牙
+    * 802.15.4，支持 Thread 和 Zigbee 协议
+    * 高性能 32 位 RISC-V 单核处理器
+    * 多种外设
+    * 内置安全硬件
+
 {IDF_TARGET_NAME} 采用 40 nm 工艺制成，具有最佳的功耗性能、射频性能、稳定性、通用性和可靠性，适用于各种应用场景和不同功耗需求。
 
 乐鑫为用户提供完整的软、硬件资源，进行 {IDF_TARGET_NAME} 硬件设备的开发。其中，乐鑫的软件开发环境 ESP-IDF 旨在协助用户快速开发物联网 (IoT) 应用，可满足用户对 Wi-Fi、蓝牙、低功耗等方面的要求。
@@ -183,3 +191,8 @@ IDE
 如果您已经安装好 ESP-IDF 且没有使用集成开发环境 (IDE)，请在命令提示行中按照 :ref:`在 Windows 中开始创建工程 <get-started-windows-first-steps>` 或 :ref:`在 Linux 和 macOS 中开始创建工程 <get-started-linux-macos-first-steps>` 编译第一个工程。
 
 .. _Stable version: https://docs.espressif.com/projects/esp-idf/en/stable/
+
+卸载 ESP-IDF
+=================
+
+如需卸载 ESP-IDF，请参考 :ref:`idf-tools-uninstall`。
