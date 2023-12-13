@@ -100,6 +100,7 @@ PYTHON_PLATFORM = platform.system() + '-' + platform.machine()
 PLATFORM_WIN32 = 'win32'
 PLATFORM_WIN64 = 'win64'
 PLATFORM_MACOS = 'macos'
+PLATFORM_MACOS_ARM64 = 'macos-arm64'
 PLATFORM_LINUX32 = 'linux-i686'
 PLATFORM_LINUX64 = 'linux-amd64'
 PLATFORM_LINUX_ARM32 = 'linux-armel'
@@ -125,7 +126,8 @@ PLATFORM_FROM_NAME = {
     'darwin': PLATFORM_MACOS,
     'Darwin-x86_64': PLATFORM_MACOS,
     # pretend it is x86_64 until Darwin-arm64 tool builds are available:
-    'Darwin-arm64': PLATFORM_MACOS,
+    'Darwin-arm64': PLATFORM_MACOS_ARM64,
+    PLATFORM_MACOS_ARM64: PLATFORM_MACOS_ARM64,
     # Linux
     PLATFORM_LINUX64: PLATFORM_LINUX64,
     'linux64': PLATFORM_LINUX64,
@@ -189,7 +191,6 @@ global_non_interactive = False
 global_idf_path = None  # type: typing.Optional[str]
 global_idf_tools_path = None  # type: typing.Optional[str]
 global_tools_json = None  # type: typing.Optional[str]
-
 
 def fatal(text, *args):
     if not global_quiet:
