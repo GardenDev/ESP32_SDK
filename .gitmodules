@@ -143,3 +143,6 @@
 [submodule "components/bt/esp_ble_mesh/lib/lib"]
 	path = components/bt/esp_ble_mesh/lib/lib
 	url = ../../espressif/esp-ble-mesh-lib.git
+[submodule "components/esp-google-iot/iot-device-sdk-embedded-c"]
+	path = components/esp-google-iot/iot-device-sdk-embedded-c
+	url = https://github.com/GardenDev/iot-device-sdk-embedded-c
