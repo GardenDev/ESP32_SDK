@@ -692,12 +692,7 @@ static int prov_auth(uint8_t method, uint8_t action, uint8_t size)
 
     switch (method) {
     case AUTH_METHOD_NO_OOB:
-        if (action || size) {
-            return -EINVAL;
-        }
-
-        (void)memset(link.auth, 0, sizeof(link.auth));
-        return 0;
+        return -EINVAL;
     case AUTH_METHOD_STATIC:
         if (action || size) {
             return -EINVAL;
