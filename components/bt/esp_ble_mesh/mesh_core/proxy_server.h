@@ -32,7 +32,7 @@ extern "C" {
  *    PDU "Read Request" will be used, and the valid length of corresponding response
  *    is 22 (23 - 1).
  */
-#define DEVICE_NAME_SIZE    MIN((BLE_MESH_GATT_DEF_MTU_SIZE - 4), (BLE_MESH_GAP_ADV_MAX_LEN - 2))
+#define DEVICE_NAME_SIZE    MAX((BLE_MESH_GATT_DEF_MTU_SIZE - 4), (BLE_MESH_GAP_ADV_MAX_LEN - 2))
 #else
 /* For Scan Response Data, the maximum length is 29 (31 - 1 - 1) currently. */
 #define DEVICE_NAME_SIZE    (BLE_MESH_GAP_ADV_MAX_LEN - 2)
