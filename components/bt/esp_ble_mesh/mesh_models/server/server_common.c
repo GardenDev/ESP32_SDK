@@ -202,10 +202,9 @@ bool bt_mesh_is_server_recv_last_msg(struct bt_mesh_last_msg_info *last,
     *now = k_uptime_get();
 
     /* Currently we only compare msg info which dst is set to a unicast address */
-    if (!BLE_MESH_ADDR_IS_UNICAST(dst)) {
+    /*if (!BLE_MESH_ADDR_IS_UNICAST(dst)) {
         return false;
-    }
-
+    }*/
     if (last->tid == tid && last->src == src && last->dst == dst &&
             (*now - last->timestamp <= K_SECONDS(6))) {
         return true;
@@ -218,9 +217,9 @@ void bt_mesh_server_update_last_msg(struct bt_mesh_last_msg_info *last,
                                     uint8_t tid, uint16_t src, uint16_t dst, int64_t *now)
 {
     /* Currently we only update msg info which dst is set to a unicast address */
-    if (!BLE_MESH_ADDR_IS_UNICAST(dst)) {
+    /*if (!BLE_MESH_ADDR_IS_UNICAST(dst)) {
         return;
-    }
+    }*/
 
     last->tid = tid;
     last->src = src;
