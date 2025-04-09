@@ -75,6 +75,7 @@ void bt_mesh_time_scene_server_cb_evt_to_btc(uint8_t evt_type, struct bt_mesh_mo
                                              const uint8_t *val, size_t len);
 
 void btc_ble_mesh_time_scene_server_cb_handler(btc_msg_t *msg);
+void btc_ble_mesh_time_scene_client_arg_deep_free(btc_msg_t *msg);
 
 #ifdef __cplusplus
 }
