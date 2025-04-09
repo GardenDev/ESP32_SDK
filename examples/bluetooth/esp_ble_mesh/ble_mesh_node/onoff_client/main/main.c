@@ -151,7 +151,7 @@ static void prov_complete(uint16_t net_idx, uint16_t addr, uint8_t flags, uint32
 {
     ESP_LOGI(TAG, "net_idx: 0x%04x, addr: 0x%04x", net_idx, addr);
     ESP_LOGI(TAG, "flags: 0x%02x, iv_index: 0x%08x", flags, iv_index);
-    board_led_operation(LED_2, LED_OFF);
+    board_led_operation(LED_2, LED_ON);
     onoff_store.net_idx = net_idx;
     scene_store.net_idx = net_idx;
     /* mesh_example_info_store() shall not be invoked here, because if the device
@@ -163,6 +163,12 @@ static void prov_complete(uint16_t net_idx, uint16_t addr, uint8_t flags, uint32
      * info here, the wrong app_idx (initialized with 0xFFFF) will be stored in nvs
      * just before restoring it.
      */
+}
+
+void resetBleMeshProvision() {
+    ESP_ERROR_CHECK(esp_ble_mesh_node_local_reset());
+    ESP_ERROR_CHECK(esp_ble_mesh_node_prov_enable(ESP_BLE_MESH_PROV_ADV | ESP_BLE_MESH_PROV_GATT));
+    board_led_operation(LED_2, LED_OFF);
 }
 
 static void example_ble_mesh_provisioning_cb(esp_ble_mesh_prov_cb_event_t event,
@@ -190,6 +196,8 @@ static void example_ble_mesh_provisioning_cb(esp_ble_mesh_prov_cb_event_t event,
             param->node_prov_complete.flags, param->node_prov_complete.iv_index);
         break;
     case ESP_BLE_MESH_NODE_PROV_RESET_EVT:
+        ESP_LOGI(TAG, "ESP_BLE_MESH_NODE_PROV_RESET_EVT");
+        resetBleMeshProvision();
         break;
     case ESP_BLE_MESH_NODE_SET_UNPROV_DEV_NAME_COMP_EVT:
         ESP_LOGI(TAG, "ESP_BLE_MESH_NODE_SET_UNPROV_DEV_NAME_COMP_EVT, err_code %d", param->node_set_unprov_dev_name_comp.err_code);
@@ -383,8 +391,6 @@ static esp_err_t ble_mesh_init(void)
     } else {
         ESP_LOGW(TAG, "node not provisioned");
     }
-
-    board_led_operation(LED_2, LED_ON);
 
     return err;
 }

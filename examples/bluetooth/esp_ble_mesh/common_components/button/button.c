@@ -403,7 +403,7 @@ esp_err_t iot_button_set_evt_cb(button_handle_t btn_handle, button_cb_type_t typ
         btn->tap_short_cb.interval = BUTTON_GLITCH_FILTER_TIME_MS / portTICK_RATE_MS;
         btn->tap_short_cb.pbtn = btn;
     } else if (type == BUTTON_CB_SERIAL) {
-        iot_button_set_serial_cb(btn_handle, 1, 1000 / portTICK_RATE_MS, cb, arg);
+        iot_button_set_serial_cb(btn_handle, 10, 1000 / portTICK_RATE_MS, cb, arg);
     }
     return ESP_OK;
 }

@@ -25,6 +25,7 @@
 
 extern bool example_ble_mesh_send_gen_onoff_set(void);
 extern void example_ble_mesh_send_scene_recall(uint16_t scene_number);
+extern void resetBleMeshProvision(void);
 
 struct _led_state led_state[3] = {
     { LED_OFF, LED_OFF, LED_1, "red"   },
@@ -69,11 +70,18 @@ static void button_tap_cb(void* arg)
     example_ble_mesh_send_scene_recall(1);
 }
 
+static void button_long_press_cb(void* arg)
+{
+    ESP_LOGI(TAG, "long press cb (%s)", (char *)arg);
+    resetBleMeshProvision();
+}
+
 static void board_button_init(void)
 {
     button_handle_t btn_handle = iot_button_create(BUTTON_IO_1, BUTTON_ACTIVE_LEVEL);
     if (btn_handle) {
         iot_button_set_evt_cb(btn_handle, BUTTON_CB_RELEASE, button_tap_cb, "RELEASE");
+        iot_button_set_evt_cb(btn_handle, BUTTON_CB_SERIAL, button_long_press_cb, "RESET");
     }
 }
 
