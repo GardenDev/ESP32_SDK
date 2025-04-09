@@ -207,8 +207,10 @@ static void example_ble_mesh_provisioning_cb(esp_ble_mesh_prov_cb_event_t event,
     }
 }
 
-bool example_ble_mesh_send_gen_onoff_set(void)
+bool example_ble_mesh_send_gen_onoff_set(uint8_t led_pin)
 {
+    board_led_operation(led_pin, onoff_store.onoff);
+
     esp_ble_mesh_generic_client_set_state_t set = {0};
     esp_ble_mesh_client_common_param_t common = {0};
     esp_err_t err = ESP_OK;
@@ -237,8 +239,13 @@ bool example_ble_mesh_send_gen_onoff_set(void)
     return set.onoff_set.onoff;
 }
 
-void example_ble_mesh_send_scene_recall(uint16_t scene_number)
+void example_ble_mesh_send_scene_recall(uint8_t led_pin, uint16_t scene_number)
 {
+
+    board_led_operation(led_pin, true);
+    vTaskDelay(100 / portTICK_PERIOD_MS);
+    board_led_operation(led_pin, false);
+
     esp_ble_mesh_time_scene_client_set_state_t set = {0};
     esp_ble_mesh_client_common_param_t common = {0};
     esp_err_t err = ESP_OK;
@@ -290,7 +297,7 @@ static void example_ble_mesh_generic_client_cb(esp_ble_mesh_generic_client_cb_ev
         ESP_LOGI(TAG, "ESP_BLE_MESH_GENERIC_CLIENT_TIMEOUT_EVT");
         if (param->params->opcode == ESP_BLE_MESH_MODEL_OP_GEN_ONOFF_SET) {
             /* If failed to get the response of Generic OnOff Set, resend Generic OnOff Set  */
-            example_ble_mesh_send_gen_onoff_set();
+            example_ble_mesh_send_gen_onoff_set(LED_1);
         }
         break;
     default:
@@ -318,7 +325,7 @@ static void example_ble_mesh_scene_client_cb(esp_ble_mesh_time_scene_client_cb_e
         ESP_LOGI(TAG, "ESP_BLE_MESH_TIME_SCENE_CLIENT_TIMEOUT_EVT");
         if (param->params->opcode == ESP_BLE_MESH_MODEL_OP_SCENE_RECALL) {
             /* If failed to get the response of Generic OnOff Set, resend Generic OnOff Set  */
-            example_ble_mesh_send_scene_recall(1);
+            example_ble_mesh_send_scene_recall(LED_1, 1);
         }
         break;
     default:

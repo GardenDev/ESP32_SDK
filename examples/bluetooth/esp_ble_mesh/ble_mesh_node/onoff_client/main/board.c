@@ -23,8 +23,8 @@
 #define BUTTON_IO_4             20
 #define BUTTON_ACTIVE_LEVEL     0
 
-extern bool example_ble_mesh_send_gen_onoff_set(void);
-extern void example_ble_mesh_send_scene_recall(uint16_t scene_number);
+extern bool example_ble_mesh_send_gen_onoff_set(uint8_t pin);
+extern void example_ble_mesh_send_scene_recall(uint8_t pin, uint16_t scene_number);
 extern void resetBleMeshProvision(void);
 
 struct _led_state led_state[3] = {
@@ -65,9 +65,8 @@ static void button_tap_cb(void* arg)
 {
     ESP_LOGI(TAG, "tap cb (%s)", (char *)arg);
 
-    //bool on = example_ble_mesh_send_gen_onoff_set();
-    //board_led_operation(LED_1, on);
-    example_ble_mesh_send_scene_recall(1);
+    //example_ble_mesh_send_scene_recall(LED_1, 1);
+    example_ble_mesh_send_gen_onoff_set(LED_1);
 }
 
 static void button_long_press_cb(void* arg)
