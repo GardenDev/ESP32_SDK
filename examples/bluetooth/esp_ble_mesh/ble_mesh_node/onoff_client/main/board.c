@@ -23,14 +23,16 @@
 #define BUTTON_IO_4             20
 #define BUTTON_ACTIVE_LEVEL     0
 
-extern bool example_ble_mesh_send_gen_onoff_set(uint8_t pin);
-extern void example_ble_mesh_send_scene_recall(uint8_t pin, uint16_t scene_number);
+extern bool example_ble_mesh_send_gen_onoff_set(uint8_t model_idx, uint8_t pin);
+extern void example_ble_mesh_send_scene_recall(uint8_t model_idx, uint8_t pin);
 extern void resetBleMeshProvision(void);
 
-struct _led_state led_state[3] = {
-    { LED_OFF, LED_OFF, LED_1, "red"   },
-    { LED_OFF, LED_OFF, LED_2, "green" },
-    { LED_OFF, LED_OFF, LED_3, "blue"  },
+struct _led_state led_state[5] = {
+    { LED_OFF, LED_OFF, LED_1, "LED_1"  },
+    { LED_OFF, LED_OFF, LED_2, "LED_2"  },
+    { LED_OFF, LED_OFF, LED_3, "LED_3"  },
+    { LED_OFF, LED_OFF, LED_4, "LED_4"  },
+    { LED_OFF, LED_OFF, LED_0, "LED_BG" },
 };
 
 void board_led_operation(uint8_t pin, uint8_t onoff)
@@ -63,10 +65,12 @@ static void board_led_init(void)
 
 static void button_tap_cb(void* arg)
 {
-    ESP_LOGI(TAG, "tap cb (%s)", (char *)arg);
+    ESP_LOGI(TAG, "tap cb (%d)", (uint8_t)arg);
 
-    example_ble_mesh_send_gen_onoff_set(LED_1);
-    example_ble_mesh_send_scene_recall(LED_1, 1);
+    uint8_t idx = (uint8_t)arg;
+
+    example_ble_mesh_send_gen_onoff_set(idx, led_state[idx].pin);
+    example_ble_mesh_send_scene_recall(idx, led_state[idx].pin);
 }
 
 static void button_long_press_cb(void* arg)
@@ -77,10 +81,25 @@ static void button_long_press_cb(void* arg)
 
 static void board_button_init(void)
 {
-    button_handle_t btn_handle = iot_button_create(BUTTON_IO_1, BUTTON_ACTIVE_LEVEL);
-    if (btn_handle) {
-        iot_button_set_evt_cb(btn_handle, BUTTON_CB_RELEASE, button_tap_cb, "RELEASE");
-        iot_button_set_evt_cb(btn_handle, BUTTON_CB_SERIAL, button_long_press_cb, "RESET");
+    button_handle_t btn_handle_0 = iot_button_create(BUTTON_IO_1, BUTTON_ACTIVE_LEVEL);
+    if (btn_handle_0) {
+        iot_button_set_evt_cb(btn_handle_0, BUTTON_CB_RELEASE, button_tap_cb, 0);
+        iot_button_set_evt_cb(btn_handle_0, BUTTON_CB_SERIAL, button_long_press_cb, "RESET");
+    }
+
+    button_handle_t btn_handle_1 = iot_button_create(BUTTON_IO_2, BUTTON_ACTIVE_LEVEL);
+    if (btn_handle_1) {
+        iot_button_set_evt_cb(btn_handle_1, BUTTON_CB_RELEASE, button_tap_cb, 1);
+    }
+
+    button_handle_t btn_handle_2 = iot_button_create(BUTTON_IO_3, BUTTON_ACTIVE_LEVEL);
+    if (btn_handle_2) {
+        iot_button_set_evt_cb(btn_handle_2, BUTTON_CB_RELEASE, button_tap_cb, 2);
+    }
+
+    button_handle_t btn_handle_3 = iot_button_create(BUTTON_IO_4, BUTTON_ACTIVE_LEVEL);
+    if (btn_handle_3) {
+        iot_button_set_evt_cb(btn_handle_3, BUTTON_CB_RELEASE, button_tap_cb, 3);
     }
 }
 

@@ -33,13 +33,13 @@ static uint8_t dev_uuid[16] = { 0xdd, 0xdd };
 static struct onoff_info_store {
     uint16_t net_idx;   /* NetKey Index */
     uint16_t app_idx;   /* AppKey Index */
-    uint8_t  onoff;     /* Remote OnOff */
-    uint8_t  tid;       /* Message TID */
+    uint8_t  onoff[4];     /* Remote OnOff */
+    uint8_t  tid[4];       /* Message TID */
 } __attribute__((packed)) onoff_store = {
     .net_idx = ESP_BLE_MESH_KEY_UNUSED,
     .app_idx = ESP_BLE_MESH_KEY_UNUSED,
-    .onoff = LED_OFF,
-    .tid = 0x0,
+    .onoff = {LED_OFF},
+    .tid = {0x0},
 };
 
 static struct scene_info_store {
@@ -56,8 +56,8 @@ static nvs_handle_t NVS_HANDLE;
 static const char * NVS_ONOFF_KEY = "onoff_client";
 static const char * NVS_SCENE_KEY = "scene_client";
 
-static esp_ble_mesh_client_t onoff_client;
-static esp_ble_mesh_client_t scene_client;
+static esp_ble_mesh_client_t onoff_client[4];
+static esp_ble_mesh_client_t scene_client[4];
 
 static esp_ble_mesh_cfg_srv_t config_server = {
     .relay = ESP_BLE_MESH_RELAY_DISABLED,
@@ -78,17 +78,42 @@ static esp_ble_mesh_cfg_srv_t config_server = {
     .relay_retransmit = ESP_BLE_MESH_TRANSMIT(2, 20),
 };
 
-ESP_BLE_MESH_MODEL_PUB_DEFINE(onoff_cli_pub, 2 + 1, ROLE_NODE);
-ESP_BLE_MESH_MODEL_PUB_DEFINE(scene_cli_pub, 2 + 3, ROLE_NODE);
+ESP_BLE_MESH_MODEL_PUB_DEFINE(onoff_cli_pub_0, 2 + 1, ROLE_NODE);
+ESP_BLE_MESH_MODEL_PUB_DEFINE(onoff_cli_pub_1, 2 + 1, ROLE_NODE);
+ESP_BLE_MESH_MODEL_PUB_DEFINE(onoff_cli_pub_2, 2 + 1, ROLE_NODE);
+ESP_BLE_MESH_MODEL_PUB_DEFINE(onoff_cli_pub_3, 2 + 1, ROLE_NODE);
 
-static esp_ble_mesh_model_t root_models[] = {
+ESP_BLE_MESH_MODEL_PUB_DEFINE(scene_cli_pub_0, 2 + 3, ROLE_NODE);
+ESP_BLE_MESH_MODEL_PUB_DEFINE(scene_cli_pub_1, 2 + 3, ROLE_NODE);
+ESP_BLE_MESH_MODEL_PUB_DEFINE(scene_cli_pub_2, 2 + 3, ROLE_NODE);
+ESP_BLE_MESH_MODEL_PUB_DEFINE(scene_cli_pub_3, 2 + 3, ROLE_NODE);
+
+static esp_ble_mesh_model_t models_0[] = {
     ESP_BLE_MESH_MODEL_CFG_SRV(&config_server),
-    ESP_BLE_MESH_MODEL_GEN_ONOFF_CLI(&onoff_cli_pub, &onoff_client),
-    ESP_BLE_MESH_MODEL_SCENE_CLI(&scene_cli_pub, &scene_client),
+    ESP_BLE_MESH_MODEL_GEN_ONOFF_CLI(&onoff_cli_pub_0, &onoff_client[0]),
+    ESP_BLE_MESH_MODEL_SCENE_CLI(&scene_cli_pub_0, &scene_client[0]),
+};
+
+static esp_ble_mesh_model_t models_1[] = {
+    ESP_BLE_MESH_MODEL_GEN_ONOFF_CLI(&onoff_cli_pub_1, &onoff_client[1]),
+    ESP_BLE_MESH_MODEL_SCENE_CLI(&scene_cli_pub_1, &scene_client[1]),
+};
+
+static esp_ble_mesh_model_t models_2[] = {
+    ESP_BLE_MESH_MODEL_GEN_ONOFF_CLI(&onoff_cli_pub_2, &onoff_client[2]),
+    ESP_BLE_MESH_MODEL_SCENE_CLI(&scene_cli_pub_2, &scene_client[2]),
+};
+
+static esp_ble_mesh_model_t models_3[] = {
+    ESP_BLE_MESH_MODEL_GEN_ONOFF_CLI(&onoff_cli_pub_3, &onoff_client[3]),
+    ESP_BLE_MESH_MODEL_SCENE_CLI(&scene_cli_pub_3, &scene_client[3]),
 };
 
 static esp_ble_mesh_elem_t elements[] = {
-    ESP_BLE_MESH_ELEMENT(0, root_models, ESP_BLE_MESH_MODEL_NONE),
+    ESP_BLE_MESH_ELEMENT(0, models_0, ESP_BLE_MESH_MODEL_NONE),
+    ESP_BLE_MESH_ELEMENT(0, models_1, ESP_BLE_MESH_MODEL_NONE),
+    ESP_BLE_MESH_ELEMENT(0, models_2, ESP_BLE_MESH_MODEL_NONE),
+    ESP_BLE_MESH_ELEMENT(0, models_3, ESP_BLE_MESH_MODEL_NONE),
 };
 
 static esp_ble_mesh_comp_t composition = {
@@ -151,7 +176,7 @@ static void prov_complete(uint16_t net_idx, uint16_t addr, uint8_t flags, uint32
 {
     ESP_LOGI(TAG, "net_idx: 0x%04x, addr: 0x%04x", net_idx, addr);
     ESP_LOGI(TAG, "flags: 0x%02x, iv_index: 0x%08x", flags, iv_index);
-    board_led_operation(LED_2, LED_ON);
+    board_led_operation(LED_0, LED_OFF);
     onoff_store.net_idx = net_idx;
     scene_store.net_idx = net_idx;
     /* mesh_example_info_store() shall not be invoked here, because if the device
@@ -168,7 +193,7 @@ static void prov_complete(uint16_t net_idx, uint16_t addr, uint8_t flags, uint32
 void resetBleMeshProvision() {
     ESP_ERROR_CHECK(esp_ble_mesh_node_local_reset());
     ESP_ERROR_CHECK(esp_ble_mesh_node_prov_enable(ESP_BLE_MESH_PROV_ADV | ESP_BLE_MESH_PROV_GATT));
-    board_led_operation(LED_2, LED_OFF);
+    board_led_operation(LED_0, LED_ON);
 }
 
 static void example_ble_mesh_provisioning_cb(esp_ble_mesh_prov_cb_event_t event,
@@ -207,45 +232,45 @@ static void example_ble_mesh_provisioning_cb(esp_ble_mesh_prov_cb_event_t event,
     }
 }
 
-bool example_ble_mesh_send_gen_onoff_set(uint8_t led_pin)
+bool example_ble_mesh_send_gen_onoff_set(uint8_t model_idx, uint8_t led_pin)
 {
     esp_ble_mesh_generic_client_set_state_t set = {0};
     esp_ble_mesh_client_common_param_t common = {0};
     esp_err_t err = ESP_OK;
 
     common.opcode = ESP_BLE_MESH_MODEL_OP_GEN_ONOFF_SET_UNACK;
-    common.model = onoff_client.model;
+    common.model = onoff_client[model_idx].model;
     common.ctx.net_idx = onoff_store.net_idx;
     common.ctx.app_idx = onoff_store.app_idx;
-    common.ctx.addr = onoff_client.model->pub->publish_addr;   /* to all nodes */
+    common.ctx.addr = common.model->pub->publish_addr;   /* to all nodes */
     common.ctx.send_ttl = 3;
     common.ctx.send_rel = false;
     common.msg_timeout = 0;     /* 0 indicates that timeout value from menuconfig will be used */
     common.msg_role = ROLE_NODE;
 
     set.onoff_set.op_en = false;
-    set.onoff_set.onoff = onoff_store.onoff;
-    set.onoff_set.tid = onoff_store.tid++;
+    set.onoff_set.onoff = onoff_store.onoff[model_idx];
+    set.onoff_set.tid = onoff_store.tid[model_idx]++;
 
     err = esp_ble_mesh_generic_client_set_state(&common, &set);
     if (err) {
         ESP_LOGE(TAG, "Send Generic OnOff Set Unack failed");
     } else {
-        board_led_operation(led_pin, onoff_store.onoff);
-        onoff_store.onoff = !onoff_store.onoff;
+        board_led_operation(led_pin, onoff_store.onoff[model_idx]);
+        onoff_store.onoff[model_idx] = !onoff_store.onoff[model_idx];
         mesh_onoff_info_store(); /* Store proper mesh example info */
     }
     return set.onoff_set.onoff;
 }
 
-void example_ble_mesh_send_scene_recall(uint8_t led_pin, uint16_t scene_number)
+void example_ble_mesh_send_scene_recall(uint8_t model_idx, uint8_t led_pin)
 {
     esp_ble_mesh_time_scene_client_set_state_t set = {0};
     esp_ble_mesh_client_common_param_t common = {0};
     esp_err_t err = ESP_OK;
 
     common.opcode = ESP_BLE_MESH_MODEL_OP_SCENE_RECALL_UNACK;
-    common.model = scene_client.model;
+    common.model = scene_client[model_idx].model;
     common.ctx.net_idx = scene_store.net_idx;
     common.ctx.app_idx = scene_store.app_idx;
     common.ctx.addr = common.model->pub->publish_addr;   /* to all nodes */
@@ -255,7 +280,7 @@ void example_ble_mesh_send_scene_recall(uint8_t led_pin, uint16_t scene_number)
     common.msg_role = ROLE_NODE;
 
     set.scene_recall.op_en = false;
-    set.scene_recall.scene_number = scene_number;
+    set.scene_recall.scene_number = model_idx + 1;
     set.scene_recall.tid = scene_store.tid++;
 
     err = esp_ble_mesh_time_scene_client_set_state(&common, &set);
@@ -293,10 +318,10 @@ static void example_ble_mesh_generic_client_cb(esp_ble_mesh_generic_client_cb_ev
         break;
     case ESP_BLE_MESH_GENERIC_CLIENT_TIMEOUT_EVT:
         ESP_LOGI(TAG, "ESP_BLE_MESH_GENERIC_CLIENT_TIMEOUT_EVT");
-        if (param->params->opcode == ESP_BLE_MESH_MODEL_OP_GEN_ONOFF_SET) {
-            /* If failed to get the response of Generic OnOff Set, resend Generic OnOff Set  */
+        /*if (param->params->opcode == ESP_BLE_MESH_MODEL_OP_GEN_ONOFF_SET) {
+            // If failed to get the response of Generic OnOff Set, resend Generic OnOff Set
             example_ble_mesh_send_gen_onoff_set(LED_1);
-        }
+        }*/
         break;
     default:
         break;
@@ -321,10 +346,10 @@ static void example_ble_mesh_scene_client_cb(esp_ble_mesh_time_scene_client_cb_e
         break;
     case ESP_BLE_MESH_TIME_SCENE_CLIENT_TIMEOUT_EVT:
         ESP_LOGI(TAG, "ESP_BLE_MESH_TIME_SCENE_CLIENT_TIMEOUT_EVT");
-        if (param->params->opcode == ESP_BLE_MESH_MODEL_OP_SCENE_RECALL) {
-            /* If failed to get the response of Generic OnOff Set, resend Generic OnOff Set  */
+        /*if (param->params->opcode == ESP_BLE_MESH_MODEL_OP_SCENE_RECALL) {
+            // If failed to get the response of Generic OnOff Set, resend Generic OnOff Set
             example_ble_mesh_send_scene_recall(LED_1, 1);
-        }
+        }*/
         break;
     default:
         break;
