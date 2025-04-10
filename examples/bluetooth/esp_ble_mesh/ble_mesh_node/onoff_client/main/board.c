@@ -65,8 +65,8 @@ static void button_tap_cb(void* arg)
 {
     ESP_LOGI(TAG, "tap cb (%s)", (char *)arg);
 
-    //example_ble_mesh_send_scene_recall(LED_1, 1);
     example_ble_mesh_send_gen_onoff_set(LED_1);
+    example_ble_mesh_send_scene_recall(LED_1, 1);
 }
 
 static void button_long_press_cb(void* arg)
