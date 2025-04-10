@@ -250,12 +250,13 @@ bool example_ble_mesh_send_gen_onoff_set(uint8_t model_idx, uint8_t led_pin)
 
     set.onoff_set.op_en = false;
     set.onoff_set.onoff = onoff_store.onoff[model_idx];
-    set.onoff_set.tid = onoff_store.tid[model_idx]++;
+    set.onoff_set.tid = onoff_store.tid[model_idx];
 
     err = esp_ble_mesh_generic_client_set_state(&common, &set);
     if (err) {
         ESP_LOGE(TAG, "Send Generic OnOff Set Unack failed");
     } else {
+        onoff_store.tid[model_idx]++;
         board_led_operation(led_pin, onoff_store.onoff[model_idx]);
         onoff_store.onoff[model_idx] = !onoff_store.onoff[model_idx];
         mesh_onoff_info_store(); /* Store proper mesh example info */
@@ -281,12 +282,13 @@ void example_ble_mesh_send_scene_recall(uint8_t model_idx, uint8_t led_pin)
 
     set.scene_recall.op_en = false;
     set.scene_recall.scene_number = model_idx + 1;
-    set.scene_recall.tid = scene_store.tid++;
+    set.scene_recall.tid = scene_store.tid;
 
     err = esp_ble_mesh_time_scene_client_set_state(&common, &set);
     if (err) {
         ESP_LOGE(TAG, "err: %d, Send Time Scene 1 Set Unack failed", err);
     } else {
+        scene_store.tid++;
         board_led_operation(led_pin, true);
         vTaskDelay(100 / portTICK_PERIOD_MS);
         board_led_operation(led_pin, false);
