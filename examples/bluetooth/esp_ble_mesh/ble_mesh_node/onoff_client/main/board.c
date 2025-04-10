@@ -22,10 +22,15 @@
 #define BUTTON_IO_3             0
 #define BUTTON_IO_4             20
 #define BUTTON_ACTIVE_LEVEL     0
+#define MAX_PRESS_INTERVAL      3000  // 最長允許 5 次按鍵總時間 (ms)
 
 extern bool example_ble_mesh_send_gen_onoff_set(uint8_t model_idx, uint8_t pin);
 extern void example_ble_mesh_send_scene_recall(uint8_t model_idx, uint8_t pin);
 extern void resetBleMeshProvision(void);
+
+static int press_count = 0;
+static int64_t first_press_time = 0;
+static bool trigger_reset = false;
 
 struct _led_state led_state[5] = {
     { LED_OFF, LED_OFF, LED_1, "LED_1"  },
@@ -63,6 +68,38 @@ static void board_led_init(void)
     }
 }
 
+static void button_push_cb(void* arg)
+{
+    ESP_LOGI(TAG, "push cb (%d)", (uint8_t)arg);
+    static int64_t last_press_time = 0;
+    int64_t now = esp_timer_get_time();  // 單位為 microseconds
+
+    if (now - last_press_time < 200000) return;  // 200ms debounce
+    last_press_time = now;
+
+    if (press_count == 0) {
+        first_press_time = now;
+    }
+
+    press_count++;
+
+    if (press_count == 5) {
+        if ((now - first_press_time) <= MAX_PRESS_INTERVAL * 1000) {
+            trigger_reset = true;
+        }
+        press_count = 0;
+    }
+
+    // 超時重置（可移到 timer loop 判斷更精準）
+    if ((now - first_press_time) > MAX_PRESS_INTERVAL * 1000) {
+        press_count = 1;
+        first_press_time = now;
+        trigger_reset = false;
+    }
+
+    ESP_LOGI(TAG, "press_count (%d)", press_count);
+}
+
 static void button_tap_cb(void* arg)
 {
     ESP_LOGI(TAG, "tap cb (%d)", (uint8_t)arg);
@@ -76,13 +113,17 @@ static void button_tap_cb(void* arg)
 static void button_long_press_cb(void* arg)
 {
     ESP_LOGI(TAG, "long press cb (%s)", (char *)arg);
-    resetBleMeshProvision();
+    if (trigger_reset) {
+        resetBleMeshProvision();
+        trigger_reset = false;
+    }
 }
 
 static void board_button_init(void)
 {
     button_handle_t btn_handle_0 = iot_button_create(BUTTON_IO_1, BUTTON_ACTIVE_LEVEL);
     if (btn_handle_0) {
+        iot_button_set_evt_cb(btn_handle_0, BUTTON_CB_PUSH, button_push_cb, 0);
         iot_button_set_evt_cb(btn_handle_0, BUTTON_CB_RELEASE, button_tap_cb, 0);
         iot_button_set_evt_cb(btn_handle_0, BUTTON_CB_SERIAL, button_long_press_cb, "RESET");
     }
