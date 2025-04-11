@@ -198,6 +198,7 @@ static void prov_complete(uint16_t net_idx, uint16_t addr, uint8_t flags, uint32
     ESP_LOGI(TAG, "net_idx: 0x%04x, addr: 0x%04x", net_idx, addr);
     ESP_LOGI(TAG, "flags: 0x%02x, iv_index: 0x%08x", flags, iv_index);
     vTaskDelete(breath_task);
+    breath_task = NULL;
     board_led_operation(LED_0, LED_ON);
     onoff_store.net_idx = net_idx;
     scene_store.net_idx = net_idx;
@@ -214,8 +215,7 @@ static void prov_complete(uint16_t net_idx, uint16_t addr, uint8_t flags, uint32
 
 void resetBleMeshProvision() {
     ESP_ERROR_CHECK(esp_ble_mesh_node_local_reset());
-    ESP_ERROR_CHECK(esp_ble_mesh_node_prov_enable(ESP_BLE_MESH_PROV_ADV | ESP_BLE_MESH_PROV_GATT));
-    xTaskCreate(&light_breathing, "breath", 2048, &led_param, 5, breath_task);
+    esp_restart();
 }
 
 static void example_ble_mesh_provisioning_cb(esp_ble_mesh_prov_cb_event_t event,
