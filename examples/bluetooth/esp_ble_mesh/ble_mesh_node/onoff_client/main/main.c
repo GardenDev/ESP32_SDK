@@ -26,7 +26,8 @@
 
 #define TAG "EXAMPLE"
 
-#define CID_ESP 0x02E5
+#define CID_ESP       0x02E5
+#define BUTTON_AMOUNT 4
 
 typedef struct {
     int blink_delay_ms;
@@ -42,8 +43,8 @@ static TaskHandle_t breath_task = NULL;
 static struct onoff_info_store {
     uint16_t net_idx;   /* NetKey Index */
     uint16_t app_idx;   /* AppKey Index */
-    uint8_t  onoff[4];     /* Remote OnOff */
-    uint8_t  tid[4];       /* Message TID */
+    uint8_t  onoff[BUTTON_AMOUNT];     /* Remote OnOff */
+    uint8_t  tid[BUTTON_AMOUNT];       /* Message TID */
 } __attribute__((packed)) onoff_store = {
     .net_idx = ESP_BLE_MESH_KEY_UNUSED,
     .app_idx = ESP_BLE_MESH_KEY_UNUSED,
@@ -65,8 +66,8 @@ static nvs_handle_t NVS_HANDLE;
 static const char * NVS_ONOFF_KEY = "onoff_client";
 static const char * NVS_SCENE_KEY = "scene_client";
 
-static esp_ble_mesh_client_t onoff_client[4];
-static esp_ble_mesh_client_t scene_client[4];
+static esp_ble_mesh_client_t onoff_client[BUTTON_AMOUNT];
+static esp_ble_mesh_client_t scene_client[BUTTON_AMOUNT];
 
 static esp_ble_mesh_cfg_srv_t config_server = {
     .relay = ESP_BLE_MESH_RELAY_DISABLED,
@@ -445,7 +446,7 @@ static esp_err_t ble_mesh_init(void)
     uint8_t mac[6];
     esp_base_mac_addr_get(mac);
     char ble_mesh_name[32] = {0};
-    sprintf(ble_mesh_name, "4-key Switch-%02X%02X%02X%02X%02X%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    sprintf(ble_mesh_name, "%d-key Switch-%02X%02X%02X%02X%02X%02X", BUTTON_AMOUNT, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     esp_ble_mesh_set_unprovisioned_device_name(ble_mesh_name);
 
     if (esp_ble_mesh_node_is_provisioned()) {
