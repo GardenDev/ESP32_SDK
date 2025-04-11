@@ -443,7 +443,7 @@ static esp_err_t ble_mesh_init(void)
     uint8_t mac[6];
     esp_base_mac_addr_get(mac);
     char ble_mesh_name[32] = {0};
-    sprintf(ble_mesh_name, "Panel Switch-%02X%02X%02X%02X%02X%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    sprintf(ble_mesh_name, "4-key Switch-%02X%02X%02X%02X%02X%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     esp_ble_mesh_set_unprovisioned_device_name(ble_mesh_name);
 
     if (esp_ble_mesh_node_is_provisioned()) {
