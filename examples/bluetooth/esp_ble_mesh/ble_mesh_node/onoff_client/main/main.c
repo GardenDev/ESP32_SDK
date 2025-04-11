@@ -219,6 +219,7 @@ void resetBleMeshProvision() {
     ble_mesh_nvs_erase(NVS_HANDLE, NVS_SCENE_KEY);
     ESP_ERROR_CHECK(esp_ble_mesh_node_local_reset());
     ESP_ERROR_CHECK(esp_ble_mesh_node_prov_enable(ESP_BLE_MESH_PROV_ADV | ESP_BLE_MESH_PROV_GATT));
+    vTaskDelay(pdMS_TO_TICKS(1000));
     esp_restart();
 }
 
