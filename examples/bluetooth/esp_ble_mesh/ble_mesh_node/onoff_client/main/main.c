@@ -28,7 +28,16 @@
 
 #define CID_ESP 0x02E5
 
+typedef struct {
+    int blink_delay_ms;
+} task_param_t;
+
+task_param_t led_param = {
+    .blink_delay_ms = 500
+};
+
 static uint8_t dev_uuid[16] = { 0xdd, 0xdd };
+static TaskHandle_t breath_task = NULL;
 
 static struct onoff_info_store {
     uint16_t net_idx;   /* NetKey Index */
@@ -172,11 +181,24 @@ static void mesh_example_info_restore(void)
     }
 }
 
+void light_breathing(void *pvParameter)
+{
+    task_param_t *param = (task_param_t *)pvParameter;
+    while(1) {
+        board_led_operation(LED_0, LED_ON);
+        vTaskDelay(pdMS_TO_TICKS(param->blink_delay_ms));
+        board_led_operation(LED_0, LED_OFF);
+        vTaskDelay(pdMS_TO_TICKS(param->blink_delay_ms));
+    }
+    vTaskDelete(NULL);
+}
+
 static void prov_complete(uint16_t net_idx, uint16_t addr, uint8_t flags, uint32_t iv_index)
 {
     ESP_LOGI(TAG, "net_idx: 0x%04x, addr: 0x%04x", net_idx, addr);
     ESP_LOGI(TAG, "flags: 0x%02x, iv_index: 0x%08x", flags, iv_index);
-    board_led_operation(LED_0, LED_OFF);
+    vTaskDelete(breath_task);
+    board_led_operation(LED_0, LED_ON);
     onoff_store.net_idx = net_idx;
     scene_store.net_idx = net_idx;
     /* mesh_example_info_store() shall not be invoked here, because if the device
@@ -193,7 +215,7 @@ static void prov_complete(uint16_t net_idx, uint16_t addr, uint8_t flags, uint32
 void resetBleMeshProvision() {
     ESP_ERROR_CHECK(esp_ble_mesh_node_local_reset());
     ESP_ERROR_CHECK(esp_ble_mesh_node_prov_enable(ESP_BLE_MESH_PROV_ADV | ESP_BLE_MESH_PROV_GATT));
-    board_led_operation(LED_0, LED_ON);
+    xTaskCreate(&light_breathing, "breath", 2048, &led_param, 5, breath_task);
 }
 
 static void example_ble_mesh_provisioning_cb(esp_ble_mesh_prov_cb_event_t event,
@@ -210,10 +232,12 @@ static void example_ble_mesh_provisioning_cb(esp_ble_mesh_prov_cb_event_t event,
     case ESP_BLE_MESH_NODE_PROV_LINK_OPEN_EVT:
         ESP_LOGI(TAG, "ESP_BLE_MESH_NODE_PROV_LINK_OPEN_EVT, bearer %s",
             param->node_prov_link_open.bearer == ESP_BLE_MESH_PROV_ADV ? "PB-ADV" : "PB-GATT");
+        led_param.blink_delay_ms = 100; 
         break;
     case ESP_BLE_MESH_NODE_PROV_LINK_CLOSE_EVT:
         ESP_LOGI(TAG, "ESP_BLE_MESH_NODE_PROV_LINK_CLOSE_EVT, bearer %s",
             param->node_prov_link_close.bearer == ESP_BLE_MESH_PROV_ADV ? "PB-ADV" : "PB-GATT");
+        led_param.blink_delay_ms = 500;
         break;
     case ESP_BLE_MESH_NODE_PROV_COMPLETE_EVT:
         ESP_LOGI(TAG, "ESP_BLE_MESH_NODE_PROV_COMPLETE_EVT");
@@ -438,6 +462,8 @@ void app_main(void)
     ESP_LOGI(TAG, "Initializing...");
 
     board_init();
+
+    xTaskCreate(light_breathing, "breath", 2048, &led_param, 5, &breath_task);
 
     err = nvs_flash_init();
     if (err == ESP_ERR_NVS_NO_FREE_PAGES) {
