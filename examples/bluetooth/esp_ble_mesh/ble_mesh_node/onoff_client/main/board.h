@@ -22,10 +22,10 @@
 #define LED_B GPIO_NUM_4
 #elif defined(CONFIG_BLE_MESH_ESP32C3_DEV)
 #define LED_0 GPIO_NUM_8
-#define LED_1 GPIO_NUM_4
-#define LED_2 GPIO_NUM_5
-#define LED_3 GPIO_NUM_8
-#define LED_4 GPIO_NUM_8
+#define LED_1 GPIO_NUM_9
+#define LED_2 GPIO_NUM_10
+#define LED_3 GPIO_NUM_4
+#define LED_4 GPIO_NUM_5
 #elif defined(CONFIG_BLE_MESH_ESP32S3_DEV)
 #define LED_R GPIO_NUM_47
 #define LED_G GPIO_NUM_47

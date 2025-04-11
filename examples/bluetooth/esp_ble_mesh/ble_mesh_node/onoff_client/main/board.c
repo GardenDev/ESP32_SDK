@@ -17,7 +17,7 @@
 
 #define TAG "BOARD"
 
-#define BUTTON_IO_1             9
+#define BUTTON_IO_1             1
 #define BUTTON_IO_2             2
 #define BUTTON_IO_3             0
 #define BUTTON_IO_4             20
