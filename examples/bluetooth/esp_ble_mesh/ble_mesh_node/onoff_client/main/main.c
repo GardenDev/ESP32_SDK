@@ -215,6 +215,8 @@ static void prov_complete(uint16_t net_idx, uint16_t addr, uint8_t flags, uint32
 
 void resetBleMeshProvision() {
     ESP_ERROR_CHECK(esp_ble_mesh_node_local_reset());
+    ble_mesh_nvs_erase(NVS_HANDLE, NVS_ONOFF_KEY);
+    ble_mesh_nvs_erase(NVS_HANDLE, NVS_SCENE_KEY);
     esp_restart();
 }
 
